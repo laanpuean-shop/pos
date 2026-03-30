@@ -3,220 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ร้านอา — POS</title>
+<title>ล้านเพื่อน — POS</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:'Sarabun',Arial,sans-serif;font-size:18px;color:#212121;background:#1a1a2e;display:flex;flex-direction:column;min-height:100dvh;overflow:hidden}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;height:100dvh}
+body{font-family:'Sarabun',Arial,sans-serif;font-size:16px;color:#212121;background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
 body.dark{background:#121212;color:#E0E0E0}
-#topbar{flex-shrink:0;height:52px;background:var(--tc);display:flex;align-items:center;padding:0 8px;gap:4px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-#shop-name-display{color:#fff;font-size:17px;font-weight:700;cursor:pointer;padding:3px 7px;border-radius:6px;white-space:nowrap}
+
+/* TOPBAR */
+#topbar{flex-shrink:0;background:var(--tc);display:flex;align-items:center;padding:0 8px;gap:3px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);min-height:48px;flex-wrap:nowrap;overflow:hidden}
+#shop-name-display{color:#fff;font-size:15px;font-weight:700;cursor:pointer;padding:3px 6px;border-radius:6px;white-space:nowrap;flex-shrink:0}
 #shop-name-display:hover{background:rgba(255,255,255,.15)}
-#shop-name-input{display:none;font-size:16px;font-weight:700;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);border-radius:6px;color:#fff;padding:3px 8px;font-family:inherit;width:150px}
-.tnav{height:52px;padding:0 8px;border:none;background:transparent;color:rgba(255,255,255,.75);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;white-space:nowrap}
+#shop-name-input{display:none;font-size:14px;font-weight:700;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);border-radius:6px;color:#fff;padding:3px 7px;font-family:inherit;width:120px;flex-shrink:0}
+.tnav{height:48px;padding:0 7px;border:none;background:transparent;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0}
 .tnav.on{color:#fff;border-bottom-color:#A5D6A7}
 .tnav:hover{color:#fff;background:rgba(255,255,255,.08)}
-#topbar-right{margin-left:auto;display:flex;align-items:center;gap:5px;position:relative}
-#datetime-box{background:rgba(0,0,0,.2);border-radius:6px;padding:2px 8px;text-align:right;border:1px solid rgba(255,255,255,.15)}
-#dt-date{font-size:10px;color:#A5D6A7;font-weight:600;white-space:nowrap}
-#dt-time{font-size:16px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1.2}
-.topbtn{padding:4px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+#topbar-right{margin-left:auto;display:flex;align-items:center;gap:4px;flex-shrink:0;position:relative}
+.topbtn{padding:4px 7px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 .topbtn:hover{background:rgba(255,255,255,.28)}
-/* DROPDOWN MENU */
-#menu-dropdown{position:absolute;top:52px;right:0;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);min-width:160px;display:none;z-index:300;overflow:hidden}
+#menu-dropdown{position:absolute;top:48px;right:0;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);min-width:160px;display:none;z-index:300;overflow:hidden}
 body.dark #menu-dropdown{background:#2d2d2d}
 #menu-dropdown.open{display:block}
-.menu-item{display:flex;align-items:center;gap:8px;padding:11px 15px;font-size:14px;font-weight:700;cursor:pointer;color:#212121;border:none;background:none;width:100%;font-family:inherit;text-align:left}
+.menu-item{display:flex;align-items:center;gap:8px;padding:12px 15px;font-size:14px;font-weight:700;cursor:pointer;color:#212121;border:none;background:none;width:100%;font-family:inherit;text-align:left}
 body.dark .menu-item{color:#E0E0E0}
 .menu-item:hover{background:#F5F5F5}
 body.dark .menu-item:hover{background:#333}
 .menu-divider{height:1px;background:#E0E0E0;margin:3px 0}
 body.dark .menu-divider{background:#444}
+
+/* APP */
 #app{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-#alert-bar{flex-shrink:0;padding:5px 12px;font-size:13px;font-weight:700;display:none}
+#alert-bar{flex-shrink:0;padding:5px 10px;font-size:12px;font-weight:700;display:none}
 .page{display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden}
 .page.on{display:flex}
-.inner-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px}
+.inner-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px}
 body.dark .inner-scroll{background:#1e1e1e}
-#pos-body{display:flex;flex:1;min-height:0;overflow:hidden}
-#cat-col{width:138px;flex-shrink:0;background:#16213e;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:4px;padding:6px}
-body.dark #cat-col{background:#0d1117}
-.catbtn{width:100%;min-height:70px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px;line-height:1.3;border:2px solid transparent}
-.catbtn.on{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.2);transform:scale(1.03)}
-.catbtn:hover:not(.on){opacity:.85}
-.cat-count{font-size:11px;opacity:.75;font-weight:400}
-#prod-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:#f0f2f5}
-body.dark #prod-col{background:#1e1e1e}
-#prod-top{flex-shrink:0;padding:6px 6px 0;display:flex;flex-direction:column;gap:5px}
+
+/* POS — DESKTOP/TABLET: 3 columns */
+#pos-page{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 #today-bar{flex-shrink:0;background:var(--tc);color:#fff;padding:5px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
 #today-bar:hover{opacity:.88}
-.tbar-item{display:flex;align-items:center;gap:4px;font-size:13px}
+.tbar-item{display:flex;align-items:center;gap:4px;font-size:12px}
 .tbar-lbl{opacity:.8;font-size:11px}
-.tbar-val{font-weight:700;font-size:14px}
+.tbar-val{font-weight:700;font-size:13px}
 .tbar-hint{margin-left:auto;font-size:11px;opacity:.65}
-#quick-btns{display:flex;gap:5px;overflow-x:auto;padding:0;align-items:center}
+#pos-body{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* CAT SIDEBAR */
+#cat-col{width:120px;flex-shrink:0;background:#16213e;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:3px;padding:5px}
+body.dark #cat-col{background:#0d1117}
+.catbtn{width:100%;min-height:64px;border:none;border-radius:9px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px;line-height:1.3;border:2px solid transparent}
+.catbtn.on{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.2);transform:scale(1.02)}
+.catbtn:hover:not(.on){opacity:.85}
+.cat-count{font-size:10px;opacity:.75;font-weight:400}
+
+/* PROD MIDDLE */
+#prod-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:#f0f2f5}
+body.dark #prod-col{background:#1e1e1e}
+#prod-top{flex-shrink:0;padding:5px 5px 0;display:flex;flex-direction:column;gap:4px}
+#quick-btns{display:flex;gap:4px;overflow-x:auto;padding:0;align-items:center}
 #quick-btns::-webkit-scrollbar{display:none}
-.qbtn-quick{flex-shrink:0;padding:5px 10px;border:none;border-radius:18px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff;white-space:nowrap}
+.qbtn-quick{flex-shrink:0;padding:4px 9px;border:none;border-radius:16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff;white-space:nowrap}
 #search-wrap{position:relative}
-#search-input{width:100%;padding:8px 12px 8px 38px;border:2px solid #C8E6C9;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;color:#212121}
+#search-input{width:100%;padding:7px 10px 7px 34px;border:2px solid #C8E6C9;border-radius:9px;font-size:15px;font-family:inherit;background:#fff;color:#212121}
 body.dark #search-input{background:#2d2d2d;color:#E0E0E0;border-color:#388E3C}
 #search-input:focus{outline:none;border-color:var(--tc)}
-#search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
-#search-results{position:absolute;top:100%;left:0;right:0;margin-top:2px;background:#fff;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-height:240px;overflow-y:auto;z-index:30}
+#search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
+#search-results{position:absolute;top:100%;left:0;right:0;margin-top:2px;background:#fff;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-height:220px;overflow-y:auto;z-index:30}
 body.dark #search-results{background:#2d2d2d}
 .sr-item{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;border-bottom:1px solid #F5F5F5}
 .sr-item:last-child{border-bottom:none}
 .sr-item:hover,.sr-item.sr-active{background:#E8F5E9}
 body.dark .sr-item:hover,body.dark .sr-item.sr-active{background:#1a3320}
-.sr-name{font-size:15px;font-weight:700}
-.sr-price{font-size:15px;font-weight:700;color:var(--tc)}
+.sr-name{font-size:14px;font-weight:700}
+.sr-price{font-size:14px;font-weight:700;color:var(--tc)}
 .sr-stock{font-size:11px;color:#9E9E9E}
-#sort-bar{display:flex;align-items:center;gap:5px}
-#sort-bar label{font-size:12px;color:#757575;font-weight:600;white-space:nowrap;flex-shrink:0}
+#sort-bar{display:flex;align-items:center;gap:4px}
+#sort-bar label{font-size:11px;color:#757575;font-weight:600;white-space:nowrap;flex-shrink:0}
 body.dark #sort-bar label{color:#aaa}
-#sort-sel{padding:4px 7px;border:1px solid #C8E6C9;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#212121;cursor:pointer;flex:1;max-width:190px}
+#sort-sel{padding:4px 6px;border:1px solid #C8E6C9;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:#212121;cursor:pointer;flex:1;max-width:180px}
 body.dark #sort-sel{background:#2d2d2d;color:#E0E0E0;border-color:#388E3C}
-#custom-area{background:#fff;border-radius:9px;padding:7px 10px;border-left:4px solid #E65100}
+#custom-area{background:#fff;border-radius:8px;padding:6px 9px;border-left:4px solid #E65100}
 body.dark #custom-area{background:#2d2d2d}
-#custom-area h4{font-size:13px;color:#E65100;font-weight:700;margin-bottom:4px}
-#custom-row{display:flex;gap:4px}
-#custom-row input{flex:1;padding:6px 8px;border:2px solid #e0e0e0;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;color:#212121}
+#custom-area h4{font-size:12px;color:#E65100;font-weight:700;margin-bottom:3px}
+#custom-row{display:flex;gap:3px}
+#custom-row input{flex:1;padding:5px 7px;border:2px solid #e0e0e0;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#212121}
 body.dark #custom-row input{background:#1e1e1e;color:#E0E0E0;border-color:#555}
-#prod-grid-wrap{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px}
-#prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.prodbtn{min-height:82px;background:#fff;border:2px solid #e0e0e0;border-top-width:4px;border-radius:12px;cursor:pointer;font-family:inherit;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.06)}
+#prod-grid-wrap{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:5px}
+#prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.prodbtn{min-height:80px;background:#fff;border:2px solid #e0e0e0;border-top-width:4px;border-radius:11px;cursor:pointer;font-family:inherit;padding:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.06);transition:transform .1s}
 body.dark .prodbtn{background:#2d2d2d;border-color:#444}
-.prodbtn:active{transform:scale(.96)}
+.prodbtn:active{transform:scale(.94)}
 .prodbtn.low{border-color:#FFB74D!important}
 .prodbtn.out{opacity:.4;pointer-events:none}
-.pname{font-size:16px;font-weight:700;color:#212121;line-height:1.3}
+.pname{font-size:14px;font-weight:700;color:#212121;line-height:1.3}
 body.dark .pname{color:#E0E0E0}
-.pprice{font-size:14px;font-weight:600;color:var(--tc)}
-.pstock-label{font-size:11px;color:#757575}
+.pprice{font-size:13px;font-weight:600;color:var(--tc)}
+.pstock-label{font-size:10px;color:#757575}
 body.dark .pstock-label{color:#aaa}
 .pstock-label.warn{color:#E65100;font-weight:700}
 .pstock-label.gone{color:#B71C1C;font-weight:700}
-#cart-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;background:#fff;box-shadow:-3px 0 10px rgba(0,0,0,.1)}
+
+/* CART SIDEBAR */
+#cart-col{width:280px;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;background:#fff;box-shadow:-3px 0 10px rgba(0,0,0,.1)}
 body.dark #cart-col{background:#1e1e1e}
-#cart-hdr{flex-shrink:0;background:var(--tc);color:#fff;padding:7px 10px;display:flex;align-items:center;justify-content:space-between}
-#cart-hdr-title{font-size:16px;font-weight:700}
+#cart-hdr{flex-shrink:0;background:var(--tc);color:#fff;padding:7px 9px;display:flex;align-items:center;justify-content:space-between}
+#cart-hdr-title{font-size:15px;font-weight:700}
 #clear-cart-btn{padding:4px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-#cart-items{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 9px}
-.cart-empty-msg{text-align:center;padding:14px 8px;color:#bbb;font-size:14px}
-.ci{display:flex;align-items:center;gap:5px;padding:5px 0;border-bottom:1px solid #f0f0f0}
+#cart-items{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 8px}
+.cart-empty-msg{text-align:center;padding:14px 8px;color:#bbb;font-size:13px}
+.ci{display:flex;align-items:center;gap:4px;padding:5px 0;border-bottom:1px solid #f0f0f0}
 body.dark .ci{border-bottom-color:#333}
 .ci-info{flex:1;min-width:0}
-.ci-name{font-size:14px;font-weight:700;line-height:1.3}
+.ci-name{font-size:13px;font-weight:700;line-height:1.3}
 body.dark .ci-name{color:#E0E0E0}
-.ci-unit{font-size:11px;color:#9E9E9E}
-.ci-sub{font-size:14px;font-weight:700;color:var(--tc);min-width:52px;text-align:right}
+.ci-unit{font-size:10px;color:#9E9E9E}
+.ci-sub{font-size:13px;font-weight:700;color:var(--tc);min-width:48px;text-align:right}
 .qrow{display:flex;align-items:center;gap:2px}
-.qbtn{width:28px;height:28px;border-radius:5px;border:none;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qbtn{width:26px;height:26px;border-radius:5px;border:none;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .qminus{background:#ffebee;color:#B71C1C}
 .qminus.pend{background:#B71C1C;color:#fff;animation:blink .5s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 .qplus{background:#E8F5E9;color:#1B5E20}
-.qnum{font-size:15px;font-weight:700;min-width:22px;text-align:center}
+.qnum{font-size:14px;font-weight:700;min-width:20px;text-align:center}
 body.dark .qnum{color:#E0E0E0}
-#cart-foot{flex-shrink:0;padding:6px 9px;border-top:2px solid #E8F5E9;background:#fff}
+#cart-foot{flex-shrink:0;padding:5px 8px;border-top:2px solid #E8F5E9;background:#fff}
 body.dark #cart-foot{background:#1e1e1e;border-top-color:#333}
 #total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-#total-lbl{font-size:14px;color:#757575;font-weight:600}
+#total-lbl{font-size:13px;color:#757575;font-weight:600}
 body.dark #total-lbl{color:#aaa}
-#total-val{font-size:24px;font-weight:700;color:var(--tc)}
-#disc-sec{background:#FFF9C4;border-radius:8px;padding:5px 8px;margin-bottom:4px}
+#total-val{font-size:22px;font-weight:700;color:var(--tc)}
+#disc-sec{background:#FFF9C4;border-radius:7px;padding:5px 7px;margin-bottom:4px}
 body.dark #disc-sec{background:#2a2600;border:1px solid #5a5000}
-#disc-sec label{font-size:12px;font-weight:700;color:#F57F17;display:block;margin-bottom:3px}
+#disc-sec label{font-size:11px;font-weight:700;color:#F57F17;display:block;margin-bottom:2px}
 .disc-row{display:flex;gap:3px;margin-bottom:3px}
-.disc-type-btn{flex:1;padding:4px;border-radius:5px;border:2px solid #FFD54F;background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.disc-type-btn{flex:1;padding:4px;border-radius:5px;border:2px solid #FFD54F;background:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
 body.dark .disc-type-btn{background:#1e1e1e;color:#E0E0E0}
 .disc-type-btn.on{background:#F57F17;color:#fff;border-color:#F57F17}
 #disc-wrap{display:flex;align-items:center;gap:3px}
-#disc-input{flex:1;padding:4px 7px;border:2px solid #FFD54F;border-radius:6px;font-size:14px;font-weight:700;text-align:center;font-family:inherit;background:#fff}
+#disc-input{flex:1;padding:4px 6px;border:2px solid #FFD54F;border-radius:5px;font-size:13px;font-weight:700;text-align:center;font-family:inherit;background:#fff}
 body.dark #disc-input{background:#1e1e1e;color:#E0E0E0}
-#disc-unit{font-size:12px;font-weight:700;color:#F57F17;min-width:15px}
-#disc-result{font-size:11px;color:#E65100;font-weight:700;text-align:right;margin-top:2px;min-height:13px}
-#net-row{display:none;justify-content:space-between;align-items:center;margin-bottom:4px}
-#net-lbl{font-size:12px;color:#E65100;font-weight:700}
-#net-val{font-size:19px;font-weight:700;color:#E65100}
-#cash-sec{background:#E3F2FD;border-radius:8px;padding:5px 8px;margin-bottom:4px}
+#disc-unit{font-size:11px;font-weight:700;color:#F57F17;min-width:14px}
+#disc-result{font-size:10px;color:#E65100;font-weight:700;text-align:right;margin-top:2px;min-height:12px}
+#net-row{display:none;justify-content:space-between;align-items:center;margin-bottom:3px}
+#net-lbl{font-size:11px;color:#E65100;font-weight:700}
+#net-val{font-size:17px;font-weight:700;color:#E65100}
+#cash-sec{background:#E3F2FD;border-radius:7px;padding:5px 7px;margin-bottom:4px}
 body.dark #cash-sec{background:#0d1b2a;border:1px solid #1a3a5a}
-#cash-sec label{font-size:12px;font-weight:700;color:#1565C0;display:block;margin-bottom:3px}
+#cash-sec label{font-size:11px;font-weight:700;color:#1565C0;display:block;margin-bottom:2px}
 body.dark #cash-sec label{color:#90CAF9}
-#cash-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;align-items:center;margin-bottom:5px}
-#cash-input{padding:6px 8px;border:2px solid #90CAF9;border-radius:7px;font-size:17px;font-weight:700;text-align:center;font-family:inherit;background:#fff;color:#1565C0;width:100%}
+#cash-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;align-items:center;margin-bottom:4px}
+#cash-input{padding:5px 7px;border:2px solid #90CAF9;border-radius:6px;font-size:16px;font-weight:700;text-align:center;font-family:inherit;background:#fff;color:#1565C0;width:100%}
 body.dark #cash-input{background:#1e1e1e;color:#90CAF9}
 #change-wrap{text-align:right}
-#change-lbl{font-size:11px;color:#1565C0;font-weight:700}
+#change-lbl{font-size:10px;color:#1565C0;font-weight:700}
 body.dark #change-lbl{color:#90CAF9}
-#change-val{font-size:17px;font-weight:700;color:#1565C0}
+#change-val{font-size:16px;font-weight:700;color:#1565C0}
 body.dark #change-val{color:#90CAF9}
-#quick-cash-btns{display:flex;gap:4px;margin-bottom:5px}
-.qcash-btn{flex:1;padding:5px 2px;border:2px solid #90CAF9;border-radius:7px;background:#fff;color:#1565C0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center}
+#quick-cash-btns{display:flex;gap:3px;margin-bottom:4px}
+.qcash-btn{flex:1;padding:5px 2px;border:2px solid #90CAF9;border-radius:6px;background:#fff;color:#1565C0;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center}
 body.dark .qcash-btn{background:#1e1e1e;color:#90CAF9;border-color:#1a3a5a}
-.qcash-btn:hover{background:#E3F2FD}
-body.dark .qcash-btn:hover{background:#0d1b2a}
-#cart-btns{display:flex;gap:4px}
-.cart-btn{flex:1;padding:9px 2px;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-#btn-pay{background:var(--tc);color:#fff;font-size:14px;flex:1.3}
+.qcash-btn:active{background:#E3F2FD}
+#cart-btns{display:flex;gap:3px}
+.cart-btn{flex:1;padding:9px 2px;border:none;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+#btn-pay{background:var(--tc);color:#fff;font-size:13px;flex:1.3}
 #btn-pay:disabled{background:#BDBDBD;cursor:not-allowed}
 #btn-debt{background:#6A1B9A;color:#fff}
 #btn-close{background:#E65100;color:#fff}
+
+/* MOBILE LAYOUT — portrait */
+@media(max-width:600px){
+  #topbar{min-height:44px;padding:0 6px;gap:2px}
+  .tnav{font-size:11px;padding:0 5px;height:44px}
+  #shop-name-display{font-size:13px}
+  #pos-body{flex-direction:column;overflow:hidden}
+  #cat-col{width:100%;height:auto;flex-direction:row;overflow-x:auto;overflow-y:hidden;max-height:52px;padding:4px;flex-shrink:0;gap:4px}
+  .catbtn{min-width:72px;min-height:44px;flex-shrink:0;font-size:11px;border-radius:8px}
+  #prod-col{flex:1;min-height:0;overflow:hidden}
+  #prod-grid{grid-template-columns:repeat(2,1fr);gap:5px}
+  .prodbtn{min-height:72px}
+  .pname{font-size:13px}
+  #cart-col{width:100%;max-height:52vh;flex-shrink:0;box-shadow:0 -3px 8px rgba(0,0,0,.1)}
+  #cart-items{max-height:120px}
+  #cart-foot{padding:4px 7px}
+  #total-val{font-size:20px}
+  .cart-btn{padding:8px 2px;font-size:11px}
+  #quick-cash-btns{gap:3px}
+  .qcash-btn{font-size:11px;padding:4px 1px}
+}
+
+/* MOBILE LANDSCAPE */
+@media(max-width:900px) and (orientation:landscape) and (max-height:500px){
+  #cat-col{width:90px}
+  #cart-col{width:240px}
+  #prod-grid{grid-template-columns:repeat(3,1fr)}
+  #cart-items{flex:1}
+  .prodbtn{min-height:65px}
+}
+
+/* TABLET */
+@media(min-width:601px) and (max-width:900px){
+  #cat-col{width:100px}
+  #cart-col{width:250px}
+  #prod-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:12px}
 .overlay.on{display:flex}
-.modal-box{background:#fff;border-radius:14px;padding:16px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 12px 36px rgba(0,0,0,.25)}
+.modal-box{background:#fff;border-radius:14px;padding:14px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 12px 36px rgba(0,0,0,.25)}
 body.dark .modal-box{background:#2d2d2d;color:#E0E0E0}
-.modal-title{font-size:17px;font-weight:700;color:var(--tc);text-align:center;margin-bottom:11px}
-.msum{background:#E8F5E9;border-radius:8px;padding:10px;margin-bottom:10px}
+.modal-title{font-size:16px;font-weight:700;color:var(--tc);text-align:center;margin-bottom:10px}
+.msum{background:#E8F5E9;border-radius:8px;padding:9px;margin-bottom:9px}
 body.dark .msum{background:#1a2e1a}
-.mrow{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
-.mrow.big{font-weight:700;font-size:16px;border-top:2px solid #C8E6C9;margin-top:6px;padding-top:7px}
-.mbtns{display:flex;gap:7px;margin-top:4px}
-.mbtn{flex:1;padding:11px;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.mrow{display:flex;justify-content:space-between;padding:3px 0;font-size:13px}
+.mrow.big{font-weight:700;font-size:15px;border-top:2px solid #C8E6C9;margin-top:5px;padding-top:6px}
+.mbtns{display:flex;gap:6px;margin-top:4px}
+.mbtn{flex:1;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .mbtn-g{background:var(--tc);color:#fff}
 .mbtn-gray{background:#90A4AE;color:#fff}
-.mbtn-r{background:#B71C1C;color:#fff}
-#day-exp-row{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:end;margin-bottom:6px}
-#day-exp-list{font-size:12px;color:#777;min-height:14px;margin-bottom:9px}
-.page-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:11px;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+#day-exp-row{display:grid;grid-template-columns:1fr 1fr auto;gap:5px;align-items:end;margin-bottom:5px}
+#day-exp-list{font-size:11px;color:#777;min-height:13px;margin-bottom:8px}
+.page-card{background:#fff;border-radius:11px;padding:12px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.07)}
 body.dark .page-card{background:#2d2d2d;color:#E0E0E0}
-.page-card h3{font-size:16px;font-weight:700;color:var(--tc);margin-bottom:10px}
-.info-note{background:#E3F2FD;border-left:4px solid #1565C0;border-radius:6px;padding:7px 11px;font-size:13px;color:#1565C0;margin-bottom:8px}
-.warn-note{background:#FFF3E0;border-left:4px solid #E65100;border-radius:6px;padding:7px 11px;font-size:13px;color:#E65100;font-weight:700;margin-bottom:8px}
-.cost-warn{background:#FFEBEE;border-left:4px solid #B71C1C;border-radius:6px;padding:7px 11px;font-size:13px;color:#B71C1C;font-weight:700;margin-top:5px;display:none}
-.backup-warn{background:#FFF3E0;border:2px solid #FF6F00;border-radius:9px;padding:9px 13px;margin-bottom:10px;font-size:13px;font-weight:700;color:#E65100;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.rpt-tabs{display:flex;margin-bottom:11px;border-radius:8px;overflow:hidden;border:2px solid #C8E6C9}
+.page-card h3{font-size:15px;font-weight:700;color:var(--tc);margin-bottom:9px}
+.info-note{background:#E3F2FD;border-left:4px solid #1565C0;border-radius:6px;padding:6px 10px;font-size:12px;color:#1565C0;margin-bottom:7px}
+.warn-note{background:#FFF3E0;border-left:4px solid #E65100;border-radius:6px;padding:6px 10px;font-size:12px;color:#E65100;font-weight:700;margin-bottom:7px}
+.cost-warn{background:#FFEBEE;border-left:4px solid #B71C1C;border-radius:6px;padding:6px 10px;font-size:12px;color:#B71C1C;font-weight:700;margin-top:4px;display:none}
+.backup-warn{background:#FFF3E0;border:2px solid #FF6F00;border-radius:8px;padding:8px 12px;margin-bottom:9px;font-size:12px;font-weight:700;color:#E65100;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.rpt-tabs{display:flex;margin-bottom:10px;border-radius:8px;overflow:hidden;border:2px solid #C8E6C9}
 body.dark .rpt-tabs{border-color:#2E7D32}
-.rpt-tab{flex:1;padding:8px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#757575;border:none;font-family:inherit}
+.rpt-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#757575;border:none;font-family:inherit}
 body.dark .rpt-tab{background:#2d2d2d;color:#aaa}
 .rpt-tab.on{background:var(--tc);color:#fff}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.stat-box{background:#fff;border-radius:9px;padding:10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.07)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:9px}
+.stat-box{background:#fff;border-radius:8px;padding:9px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.07)}
 body.dark .stat-box{background:#2d2d2d}
-.stat-lbl{font-size:12px;color:#757575;font-weight:600;margin-bottom:2px}
+.stat-lbl{font-size:11px;color:#757575;font-weight:600;margin-bottom:2px}
 body.dark .stat-lbl{color:#aaa}
-.stat-val{font-size:20px;font-weight:700}
-.cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.cmp-box{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.07)}
+.stat-val{font-size:18px;font-weight:700}
+.cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:9px}
+.cmp-box{background:#fff;border-radius:9px;padding:10px 8px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.07)}
 body.dark .cmp-box{background:#2d2d2d}
-.cmp-lbl{font-size:12px;color:#757575;font-weight:600;margin-bottom:4px}
+.cmp-lbl{font-size:11px;color:#757575;font-weight:600;margin-bottom:3px}
 body.dark .cmp-lbl{color:#aaa}
-.cmp-val{font-size:22px;font-weight:700;margin-bottom:3px}
-.cmp-diff{font-size:13px;font-weight:700}
+.cmp-val{font-size:18px;font-weight:700;margin-bottom:2px}
+.cmp-diff{font-size:12px;font-weight:700}
 .cmp-diff.up{color:#2E7D32}.cmp-diff.dn{color:#B71C1C}.cmp-diff.eq{color:#9E9E9E}
-.pmeter{border-radius:9px;padding:11px 13px;margin-bottom:11px;display:flex;align-items:center;gap:10px}
-.pmeter-pct{font-size:34px;font-weight:700;line-height:1}
-.pmeter-lbl{font-size:13px;font-weight:600;margin-top:2px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.fg{margin-bottom:8px}
-.flbl{font-size:14px;font-weight:600;color:#424242;display:block;margin-bottom:3px}
+.pmeter{border-radius:8px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.pmeter-pct{font-size:30px;font-weight:700;line-height:1}
+.pmeter-lbl{font-size:12px;font-weight:600;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.fg{margin-bottom:7px}
+.flbl{font-size:13px;font-weight:600;color:#424242;display:block;margin-bottom:2px}
 body.dark .flbl{color:#ccc}
-input[type=text],input[type=number],select{width:100%;padding:8px 10px;border:2px solid #E0E0E0;border-radius:7px;font-size:15px;font-family:inherit;color:#212121;background:#fff}
+input[type=text],input[type=number],select{width:100%;padding:7px 9px;border:2px solid #E0E0E0;border-radius:7px;font-size:14px;font-family:inherit;color:#212121;background:#fff}
 body.dark input[type=text],body.dark input[type=number],body.dark select{background:#2d2d2d;color:#E0E0E0;border-color:#555}
 input:focus,select:focus{outline:none;border-color:var(--tc)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:7px 12px;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:7px 11px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit}
 .btn-g{background:var(--tc);color:#fff}
 .btn-r{background:#B71C1C;color:#fff}
 .btn-b{background:#1565C0;color:#fff}
@@ -224,100 +270,94 @@ input:focus,select:focus{outline:none;border-color:var(--tc)}
 .btn-gray{background:#607D8B;color:#fff}
 .btn-teal{background:#00695C;color:#fff}
 .btn-warn{background:#F57F17;color:#fff}
-.btn-sm{padding:5px 9px;font-size:12px;border-radius:5px}
-.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:700}
+.btn-sm{padding:5px 8px;font-size:11px;border-radius:5px}
+.badge{display:inline-block;padding:2px 6px;border-radius:20px;font-size:11px;font-weight:700}
 .bgg{background:#E8F5E9;color:#1B5E20}.bgr{background:#FFEBEE;color:#B71C1C}
 .bgb{background:#E3F2FD;color:#1565C0}.bgo{background:#FFF3E0;color:#E65100}
 .twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:300px}
-th{background:#E8F5E9;padding:8px 10px;text-align:left;font-weight:700;font-size:13px;color:#1B5E20;border-bottom:2px solid #C8E6C9}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:280px}
+th{background:#E8F5E9;padding:7px 9px;text-align:left;font-weight:700;font-size:12px;color:#1B5E20;border-bottom:2px solid #C8E6C9}
 body.dark th{background:#1a2e1a;color:#A5D6A7;border-bottom-color:#2E7D32}
-td{padding:8px 10px;border-bottom:1px solid #F5F5F5;vertical-align:middle;font-size:14px}
+td{padding:7px 9px;border-bottom:1px solid #F5F5F5;vertical-align:middle;font-size:13px}
 body.dark td{border-bottom-color:#333;color:#E0E0E0}
 tr:hover td{background:#FAFFFE}
 body.dark tr:hover td{background:#252525}
 .nr{text-align:right}
-.empty-msg{text-align:center;padding:20px;color:#9E9E9E;font-size:14px}
-.t5row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #F5F5F5}
+.empty-msg{text-align:center;padding:18px;color:#9E9E9E;font-size:13px}
+.t5row{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid #F5F5F5}
 body.dark .t5row{border-bottom-color:#333}
 .t5row:last-child{border-bottom:none}
-.t5rank{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.t5rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0}
 .rk1{background:#FFD700;color:#5D4037}.rk2{background:#B0BEC5;color:#37474F}
 .rk3{background:#FFAB91;color:#BF360C}.rk4,.rk5{background:#E0E0E0;color:#616161}
-.t5bar{height:6px;border-radius:3px;background:#C8E6C9;flex:1}
-.t5fill{height:6px;border-radius:3px;background:#2E7D32}
-.cat-chip{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:4px 10px;font-size:13px;font-weight:700;margin:2px}
-.chip-del{background:none;border:none;cursor:pointer;font-size:14px;line-height:1;padding:0}
-.csv-box{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:9px;padding:10px 12px;margin-bottom:10px}
+.t5bar{height:5px;border-radius:3px;background:#C8E6C9;flex:1}
+.t5fill{height:5px;border-radius:3px;background:#2E7D32}
+.cat-chip{display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:3px 9px;font-size:12px;font-weight:700;margin:2px}
+.chip-del{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;padding:0}
+.csv-box{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:8px;padding:9px 11px;margin-bottom:9px}
 body.dark .csv-box{background:#1a2e1a;border-color:#2E7D32}
-.csv-box h4{font-size:14px;font-weight:700;color:#1B5E20;margin-bottom:6px}
+.csv-box h4{font-size:13px;font-weight:700;color:#1B5E20;margin-bottom:5px}
 body.dark .csv-box h4{color:#A5D6A7}
-.csv-btns{display:flex;flex-wrap:wrap;gap:5px}
-.reset-zone{border:2px dashed #B71C1C;border-radius:10px;padding:13px;margin-top:13px;text-align:center}
-.reset-zone p{font-size:12px;color:#B71C1C;margin-bottom:7px}
-.key-hint{display:inline-block;background:#E0E0E0;color:#424242;border-radius:4px;padding:1px 5px;font-size:11px;font-family:monospace;margin-left:3px}
-body.dark .key-hint{background:#444;color:#ccc}
-.bill-card{background:#F9FBE7;border-radius:9px;padding:10px;margin-bottom:8px;border-left:4px solid var(--tc)}
-body.dark .bill-card{background:#1a2400}
-.bill-card.voided{opacity:.5;border-left-color:#9E9E9E}
-.bill-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.bill-num{font-size:13px;font-weight:700;color:var(--tc)}
-body.dark .bill-num{color:#A5D6A7}
-.bill-total{font-size:15px;font-weight:700;color:var(--tc)}
-body.dark .bill-total{color:#A5D6A7}
-.bill-list{font-size:12px;color:#616161;line-height:1.7}
-body.dark .bill-list{color:#aaa}
-.theme-dot{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;display:inline-block}
-.theme-dot:hover{transform:scale(1.1)}
-.theme-dot.on{border-color:#fff;box-shadow:0 0 0 2px #555}
-.theme-dots{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.admin-filter-bar{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
-.admin-filter-bar select{max-width:160px;flex-shrink:0}
-.admin-filter-bar input{flex:1;min-width:120px}
-.restock-section{border-radius:9px;padding:12px;margin-bottom:10px}
+.csv-btns{display:flex;flex-wrap:wrap;gap:4px}
+.reset-zone{border:2px dashed #B71C1C;border-radius:9px;padding:12px;margin-top:12px;text-align:center}
+.reset-zone p{font-size:11px;color:#B71C1C;margin-bottom:6px}
+.admin-filter-bar{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap;align-items:center}
+.admin-filter-bar select{max-width:150px;flex-shrink:0}
+.admin-filter-bar input{flex:1;min-width:100px}
+.restock-section{border-radius:8px;padding:10px;margin-bottom:9px}
 .restock-cur{background:#E8F5E9}
 body.dark .restock-cur{background:#1a2e1a}
 .restock-new{background:#E3F2FD}
 body.dark .restock-new{background:#0d1b2a}
-.restock-title{font-size:13px;font-weight:700;margin-bottom:8px}
-.restock-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.restock-field label{font-size:11px;font-weight:700;color:#757575;display:block;margin-bottom:3px}
+.restock-title{font-size:12px;font-weight:700;margin-bottom:7px}
+.restock-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.restock-field label{font-size:10px;font-weight:700;color:#757575;display:block;margin-bottom:2px}
 body.dark .restock-field label{color:#aaa}
-.restock-field input{padding:6px 8px;font-size:15px;font-weight:700;text-align:center;border:2px solid #C8E6C9;border-radius:7px;width:100%;font-family:inherit;background:#fff;color:#212121}
+.restock-field input{padding:5px 7px;font-size:14px;font-weight:700;text-align:center;border:2px solid #C8E6C9;border-radius:6px;width:100%;font-family:inherit;background:#fff;color:#212121}
 body.dark .restock-field input{background:#2d2d2d;color:#E0E0E0;border-color:#388E3C}
-.edit-bill-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f0f0f0}
+.edit-bill-item{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid #f0f0f0}
 body.dark .edit-bill-item{border-bottom-color:#333}
-.edit-bill-name{flex:1;font-size:14px;font-weight:700}
+.edit-bill-name{flex:1;font-size:13px;font-weight:700}
 body.dark .edit-bill-name{color:#E0E0E0}
-.edit-bill-qty{width:60px;padding:4px 6px;font-size:15px;font-weight:700;text-align:center;border:2px solid #C8E6C9;border-radius:6px;font-family:inherit;background:#fff;color:#212121}
+.edit-bill-qty{width:56px;padding:4px 5px;font-size:14px;font-weight:700;text-align:center;border:2px solid #C8E6C9;border-radius:5px;font-family:inherit;background:#fff;color:#212121}
 body.dark .edit-bill-qty{background:#2d2d2d;color:#E0E0E0;border-color:#388E3C}
-/* DEBT */
-.debt-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,.08);border-left:4px solid #6A1B9A}
+.bill-card{background:#F9FBE7;border-radius:8px;padding:9px;margin-bottom:7px;border-left:4px solid var(--tc)}
+body.dark .bill-card{background:#1a2400}
+.bill-card.voided{opacity:.5;border-left-color:#9E9E9E}
+.bill-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.bill-num{font-size:12px;font-weight:700;color:var(--tc)}
+body.dark .bill-num{color:#A5D6A7}
+.bill-total{font-size:14px;font-weight:700;color:var(--tc)}
+body.dark .bill-total{color:#A5D6A7}
+.bill-list{font-size:11px;color:#616161;line-height:1.6}
+body.dark .bill-list{color:#aaa}
+.theme-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;display:inline-block}
+.theme-dot:hover{transform:scale(1.1)}
+.theme-dot.on{border-color:#fff;box-shadow:0 0 0 2px #555}
+.theme-dots{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+.debt-card{background:#fff;border-radius:9px;padding:11px;margin-bottom:7px;box-shadow:0 2px 6px rgba(0,0,0,.08);border-left:4px solid #6A1B9A}
 body.dark .debt-card{background:#2a1a2e;border-left-color:#9C27B0}
 .debt-card.paid{opacity:.5;border-left-color:#9E9E9E}
-.debt-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.debt-name{font-size:16px;font-weight:700;color:#6A1B9A}
+.debt-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.debt-name{font-size:15px;font-weight:700;color:#6A1B9A}
 body.dark .debt-name{color:#CE93D8}
-.debt-amount{font-size:20px;font-weight:700;color:#B71C1C}
-.debt-info{font-size:12px;color:#9E9E9E;margin-bottom:6px}
-.debt-actions{display:flex;gap:6px}
-@media(max-width:840px){#cat-col{width:106px}#cart-col{width:255px}#prod-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:580px){#pos-body{flex-direction:column;overflow:auto;-webkit-overflow-scrolling:touch}#cat-col{width:100%;min-height:auto;flex-direction:row;overflow-x:auto;max-height:60px;padding:5px}.catbtn{min-width:76px;min-height:50px;flex-shrink:0}#cart-col{width:100%;min-height:auto}#cart-items{max-height:180px}#datetime-box{display:none}#prod-grid{grid-template-columns:repeat(2,1fr)}}
+.debt-amount{font-size:18px;font-weight:700;color:#B71C1C}
+.debt-info{font-size:11px;color:#9E9E9E;margin-bottom:5px}
+.debt-actions{display:flex;gap:5px}
 </style>
 </head>
 <body>
 <div id="topbar">
-  <span id="shop-name-display" onclick="startEditName()">🏪 ร้านอา</span>
+  <span id="shop-name-display" onclick="startEditName()">🏪 ล้านเพื่อน</span>
   <input type="text" id="shop-name-input" onblur="saveName()" onkeydown="nameKey(event)">
-  <button class="tnav on" data-pg="pos"    onclick="goPage(this)">💰 ขายของ</button>
-  <button class="tnav"     data-pg="report" onclick="goPage(this)">📊 รายงาน</button>
-  <button class="tnav"     data-pg="admin"  onclick="goPage(this)">⚙️ หลังบ้าน</button>
+  <button class="tnav on" data-pg="pos" onclick="goPage(this)">💰 ขาย</button>
+  <button class="tnav" data-pg="report" onclick="goPage(this)">📊 รายงาน</button>
+  <button class="tnav" data-pg="admin" onclick="goPage(this)">⚙️ หลังบ้าน</button>
   <div id="topbar-right">
-    <div id="datetime-box"><div id="dt-date"></div><div id="dt-time"></div></div>
     <button class="topbtn" onclick="toggleDark()" id="dark-btn">🌙</button>
     <button class="topbtn" onclick="openTheme()">🎨</button>
     <button class="topbtn" onclick="openDebtListModal()">👤</button>
-    <button class="topbtn" onclick="toggleMenu(event)" id="menu-btn">☰ เมนู</button>
+    <button class="topbtn" onclick="toggleMenu(event)">☰</button>
     <div id="menu-dropdown">
       <button class="menu-item" onclick="doExport();closeMenu()">💾 สำรองข้อมูล</button>
       <button class="menu-item" onclick="document.getElementById('imp-file').click();closeMenu()">📂 นำเข้าข้อมูล</button>
@@ -329,86 +369,86 @@ body.dark .debt-name{color:#CE93D8}
 </div>
 <div id="app">
   <div id="alert-bar"></div>
-  <!-- POS -->
   <div class="page on" id="page-pos">
-    <div id="today-bar" onclick="openBillHistory()" title="กดดูประวัติบิลวันนี้">
-      <div class="tbar-item"><span class="tbar-lbl">ยอดวันนี้</span><span class="tbar-val" id="tbar-rev">฿0</span></div>
-      <div class="tbar-item"><span class="tbar-lbl">กำไร</span><span class="tbar-val" id="tbar-pft">฿0</span></div>
-      <div class="tbar-item"><span class="tbar-lbl">บิล</span><span class="tbar-val" id="tbar-bills">0 บิล</span></div>
-      <span class="tbar-hint">📋 กดดูประวัติ</span>
-    </div>
-    <div id="pos-body">
-      <div id="cat-col"></div>
-      <div id="prod-col">
-        <div id="prod-top">
-          <div id="quick-btns"></div>
-          <div id="search-wrap">
-            <span id="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="ค้นหาสินค้า... <F1>" oninput="doSearch()" onkeydown="searchKeydown(event)" onblur="hideSearch()" autocomplete="off">
-            <div id="search-results"></div>
-          </div>
-          <div id="sort-bar">
-            <label>เรียง:</label>
-            <select id="sort-sel" onchange="onSortChange()">
-              <option value="default">ค่าเริ่มต้น</option>
-              <option value="popular">ขายดี</option>
-              <option value="name">ชื่อ ก-ฮ</option>
-              <option value="price_asc">ราคา น้อย→มาก</option>
-              <option value="stock_low">สต็อกใกล้หมด</option>
-            </select>
-          </div>
-          <div id="custom-area">
-            <h4>➕ สินค้าไม่มีในระบบ / ราคาพิเศษ</h4>
-            <div id="custom-row">
-              <input type="text" id="cust-name" placeholder="ชื่อสินค้า">
-              <input type="number" id="cust-price" placeholder="ราคา (฿)" style="max-width:95px">
-              <button class="btn btn-o btn-sm" onclick="addCustom()">+ เพิ่ม</button>
-            </div>
-          </div>
-        </div>
-        <div id="prod-grid-wrap"><div id="prod-grid"></div></div>
+    <div id="pos-page">
+      <div id="today-bar" onclick="openBillHistory()">
+        <div class="tbar-item"><span class="tbar-lbl">ยอดวันนี้</span><span class="tbar-val" id="tbar-rev">฿0</span></div>
+        <div class="tbar-item"><span class="tbar-lbl">กำไร</span><span class="tbar-val" id="tbar-pft">฿0</span></div>
+        <div class="tbar-item"><span class="tbar-lbl">บิล</span><span class="tbar-val" id="tbar-bills">0 บิล</span></div>
+        <span class="tbar-hint">📋 กดดูประวัติ</span>
       </div>
-      <div id="cart-col">
-        <div id="cart-hdr">
-          <span id="cart-hdr-title">🛒 ตะกร้า</span>
-          <button id="clear-cart-btn" onclick="clearCart()">🗑️ ล้างตะกร้า</button>
+      <div id="pos-body">
+        <div id="cat-col"></div>
+        <div id="prod-col">
+          <div id="prod-top">
+            <div id="quick-btns"></div>
+            <div id="search-wrap">
+              <span id="search-icon">🔍</span>
+              <input type="text" id="search-input" placeholder="ค้นหาสินค้า..." oninput="doSearch()" onkeydown="searchKeydown(event)" onblur="hideSearch()" autocomplete="off">
+              <div id="search-results"></div>
+            </div>
+            <div id="sort-bar">
+              <label>เรียง:</label>
+              <select id="sort-sel" onchange="onSortChange()">
+                <option value="default">ค่าเริ่มต้น</option>
+                <option value="popular">ขายดี</option>
+                <option value="name">ชื่อ ก-ฮ</option>
+                <option value="price_asc">ราคา น้อย→มาก</option>
+                <option value="stock_low">สต็อกใกล้หมด</option>
+              </select>
+            </div>
+            <div id="custom-area">
+              <h4>➕ สินค้าไม่มีในระบบ / ราคาพิเศษ</h4>
+              <div id="custom-row">
+                <input type="text" id="cust-name" placeholder="ชื่อสินค้า">
+                <input type="number" id="cust-price" placeholder="ราคา" style="max-width:80px">
+                <button class="btn btn-o btn-sm" onclick="addCustom()">+เพิ่ม</button>
+              </div>
+            </div>
+          </div>
+          <div id="prod-grid-wrap"><div id="prod-grid"></div></div>
         </div>
-        <div id="cart-items"><div class="cart-empty-msg">กดสินค้าเพื่อเพิ่มในตะกร้า</div></div>
-        <div id="cart-foot">
-          <div id="total-row"><span id="total-lbl">ยอดรวม</span><span id="total-val">฿ 0.00</span></div>
-          <div id="disc-sec">
-            <label>🏷️ ส่วนลด</label>
-            <div class="disc-row">
-              <button class="disc-type-btn on" id="disc-bath" onclick="setDiscType('bath')">บาท (฿)</button>
-              <button class="disc-type-btn" id="disc-pct" onclick="setDiscType('pct')">% เปอร์เซ็นต์</button>
-            </div>
-            <div id="disc-wrap"><input type="number" id="disc-input" placeholder="0" min="0" oninput="calcDisc()"><span id="disc-unit">฿</span></div>
-            <div id="disc-result"></div>
+        <div id="cart-col">
+          <div id="cart-hdr">
+            <span id="cart-hdr-title">🛒 ตะกร้า</span>
+            <button id="clear-cart-btn" onclick="clearCart()">🗑️ ล้าง</button>
           </div>
-          <div id="net-row"><span id="net-lbl">ยอดหลังลด</span><span id="net-val">฿ 0.00</span></div>
-          <div id="cash-sec">
-            <label>💵 รับเงินมา <span class="key-hint">F2</span></label>
-            <div id="cash-grid">
-              <input type="number" id="cash-input" placeholder="0" oninput="onCashInput()" onkeydown="cashKeydown(event)">
-              <div id="change-wrap"><div id="change-lbl">เงินทอน</div><div id="change-val">-</div></div>
+          <div id="cart-items"><div class="cart-empty-msg">กดสินค้าเพื่อเพิ่มในตะกร้า</div></div>
+          <div id="cart-foot">
+            <div id="total-row"><span id="total-lbl">ยอดรวม</span><span id="total-val">฿ 0.00</span></div>
+            <div id="disc-sec">
+              <label>🏷️ ส่วนลด</label>
+              <div class="disc-row">
+                <button class="disc-type-btn on" id="disc-bath" onclick="setDiscType('bath')">บาท (฿)</button>
+                <button class="disc-type-btn" id="disc-pct" onclick="setDiscType('pct')">% เปอร์เซ็นต์</button>
+              </div>
+              <div id="disc-wrap"><input type="number" id="disc-input" placeholder="0" min="0" oninput="calcDisc()"><span id="disc-unit">฿</span></div>
+              <div id="disc-result"></div>
             </div>
-            <div id="quick-cash-btns">
-              <button class="qcash-btn" onclick="addCash(20)">+฿20</button>
-              <button class="qcash-btn" onclick="addCash(50)">+฿50</button>
-              <button class="qcash-btn" onclick="addCash(100)">+฿100</button>
-              <button class="qcash-btn" onclick="addCash(500)">+฿500</button>
+            <div id="net-row"><span id="net-lbl">ยอดหลังลด</span><span id="net-val">฿ 0.00</span></div>
+            <div id="cash-sec">
+              <label>💵 รับเงินมา</label>
+              <div id="cash-grid">
+                <input type="number" id="cash-input" placeholder="0" oninput="onCashInput()" onkeydown="cashKeydown(event)">
+                <div id="change-wrap"><div id="change-lbl">เงินทอน</div><div id="change-val">-</div></div>
+              </div>
+              <div id="quick-cash-btns">
+                <button class="qcash-btn" onclick="addCash(20)">+฿20</button>
+                <button class="qcash-btn" onclick="addCash(50)">+฿50</button>
+                <button class="qcash-btn" onclick="addCash(100)">+฿100</button>
+                <button class="qcash-btn" onclick="addCash(500)">+฿500</button>
+              </div>
             </div>
-          </div>
-          <div id="cart-btns">
-            <button class="cart-btn" id="btn-pay" onclick="openConfirmPay()" disabled>✅ ชำระ</button>
-            <button class="cart-btn" id="btn-debt" onclick="openDebtModal()">💳 เชื่อ</button>
-            <button class="cart-btn" id="btn-close" onclick="openDayModal()">📋 ปิดยอด</button>
+            <div id="cart-btns">
+              <button class="cart-btn" id="btn-pay" onclick="openConfirmPay()" disabled>✅ ชำระ</button>
+              <button class="cart-btn" id="btn-debt" onclick="openDebtModal()">💳 เชื่อ</button>
+              <button class="cart-btn" id="btn-close" onclick="openDayModal()">📋 ปิดยอด</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- REPORT -->
   <div class="page" id="page-report">
     <div class="inner-scroll">
       <div id="backup-warn-bar"></div>
@@ -417,15 +457,15 @@ body.dark .debt-name{color:#CE93D8}
         <button class="rpt-tab" id="tab-y" onclick="switchTab('y')">📆 รายปี</button>
       </div>
       <div id="panel-m">
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;align-items:flex-end">
           <div class="fg" style="margin:0"><label class="flbl">เดือน</label>
-            <select id="rpt-m" onchange="renderMonth()" style="min-width:130px">
+            <select id="rpt-m" onchange="renderMonth()" style="min-width:120px">
               <option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option>
               <option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option>
               <option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option>
               <option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option>
             </select></div>
-          <div class="fg" style="margin:0"><label class="flbl">ปี (ค.ศ.)</label><input type="number" id="rpt-y" value="2025" onchange="renderMonth()" style="max-width:84px"></div>
+          <div class="fg" style="margin:0"><label class="flbl">ปี (ค.ศ.)</label><input type="number" id="rpt-y" value="2025" onchange="renderMonth()" style="max-width:80px"></div>
           <button class="btn btn-g" onclick="renderMonth()">แสดง</button>
         </div>
         <div id="m-meter"></div>
@@ -448,13 +488,13 @@ body.dark .debt-name{color:#CE93D8}
         <div class="page-card"><h3>📅 ยอดขายรายวัน</h3><div class="twrap" id="m-daily"></div></div>
       </div>
       <div id="panel-y" style="display:none">
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end">
-          <div class="fg" style="margin:0"><label class="flbl">ปี (ค.ศ.)</label><input type="number" id="rpt-yy" value="2025" onchange="renderYear()" style="max-width:84px"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;align-items:flex-end">
+          <div class="fg" style="margin:0"><label class="flbl">ปี (ค.ศ.)</label><input type="number" id="rpt-yy" value="2025" onchange="renderYear()" style="max-width:80px"></div>
           <button class="btn btn-g" onclick="renderYear()">แสดง</button>
         </div>
         <div id="y-meter"></div>
         <div class="stat-grid" id="y-stats"></div>
-        <div class="page-card"><h3>📊 กราฟยอดขายและกำไรรายเดือน</h3><div style="position:relative;height:190px"><canvas id="year-chart"></canvas></div></div>
+        <div class="page-card"><h3>📊 กราฟยอดขายและกำไรรายเดือน</h3><div style="position:relative;height:180px"><canvas id="year-chart"></canvas></div></div>
         <div class="csv-box"><h4>📥 ดาวน์โหลด CSV รายปี</h4>
           <div class="csv-btns">
             <button class="btn btn-g btn-sm" onclick="csvYearSum()">📊 สรุปปี 12 เดือน</button>
@@ -469,18 +509,17 @@ body.dark .debt-name{color:#CE93D8}
       </div>
     </div>
   </div>
-  <!-- ADMIN -->
   <div class="page" id="page-admin">
     <div class="inner-scroll">
       <div class="page-card">
         <h3>↩️ บิลล่าสุดวันนี้</h3>
         <div class="info-note">ยกเลิกหรือแก้ไขได้เฉพาะบิลล่าสุดที่ยังไม่ถูกยกเลิก</div>
-        <div id="last-bill-info" style="margin-bottom:9px"></div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <div id="last-bill-info" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-warn" onclick="openEditBill()" id="edit-bill-btn">✏️ แก้ไขบิลล่าสุด</button>
           <button class="btn btn-r" onclick="voidLastBill()" id="void-btn">❌ ยกเลิกบิลล่าสุด</button>
         </div>
-        <div id="msg-void" style="font-size:13px;font-weight:700;margin-top:5px"></div>
+        <div id="msg-void" style="font-size:12px;font-weight:700;margin-top:5px"></div>
       </div>
       <div class="page-card">
         <h3>➕ เพิ่มสินค้าใหม่</h3>
@@ -496,28 +535,28 @@ body.dark .debt-name{color:#CE93D8}
         </div>
         <div class="cost-warn" id="cost-warn">⚠️ ต้นทุนสูงกว่าราคาขาย!</div>
         <button class="btn btn-g" onclick="addProd()">➕ เพิ่มสินค้า</button>
-        <div id="msg-ap" style="font-size:13px;font-weight:700;margin-top:5px"></div>
+        <div id="msg-ap" style="font-size:12px;font-weight:700;margin-top:5px"></div>
       </div>
       <div class="page-card">
         <h3>🏷️ จัดการหมวดหมู่</h3>
-        <div style="display:flex;gap:6px;margin-bottom:7px"><input type="text" id="new-cat" placeholder="ชื่อหมวดหมู่ใหม่" style="flex:1"><button class="btn btn-g" onclick="addCat()">➕ เพิ่ม</button></div>
+        <div style="display:flex;gap:5px;margin-bottom:6px"><input type="text" id="new-cat" placeholder="ชื่อหมวดหมู่ใหม่" style="flex:1"><button class="btn btn-g" onclick="addCat()">➕ เพิ่ม</button></div>
         <div id="cat-chips"></div>
       </div>
       <div class="page-card">
         <h3>🛒 รายการสินค้า / จัดการสต็อก</h3>
-        <div id="stock-warn-admin" style="margin-bottom:7px"></div>
+        <div id="stock-warn-admin" style="margin-bottom:6px"></div>
         <div class="admin-filter-bar">
           <select id="admin-cat-filter" onchange="renderAdminProds()"><option value="all">ทุกหมวดหมู่</option></select>
           <input type="text" id="admin-search" placeholder="ค้นหาสินค้า..." oninput="renderAdminProds()">
         </div>
-        <div class="info-note">กดปุ่ม ✏️ เพื่อแก้ไขราคาหรือเติมสต็อก | ปุ่ม 🗑️ ลบสินค้า</div>
+        <div class="info-note">กด 🗑️ ลบสินค้า | กด ✏️ แก้ไข/เติมสต็อก</div>
         <div class="twrap" id="admin-tbl"></div>
       </div>
       <div class="page-card">
         <h3>💸 บันทึกค่าใช้จ่ายวันนี้</h3>
-        <div style="background:#F9FBE7;border-radius:8px;padding:8px;margin-bottom:9px">
-          <div style="font-size:12px;font-weight:700;color:#558B2F;margin-bottom:4px">⚙️ จัดการประเภทค่าใช้จ่าย</div>
-          <div style="display:flex;gap:5px;margin-bottom:5px"><input type="text" id="new-exp-type" placeholder="เพิ่มประเภทใหม่ เช่น ค่าน้ำมัน" style="flex:1"><button class="btn btn-g btn-sm" onclick="addExpType()">+ เพิ่ม</button></div>
+        <div style="background:#F9FBE7;border-radius:7px;padding:7px;margin-bottom:8px">
+          <div style="font-size:11px;font-weight:700;color:#558B2F;margin-bottom:4px">⚙️ จัดการประเภทค่าใช้จ่าย</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px"><input type="text" id="new-exp-type" placeholder="เพิ่มประเภทใหม่" style="flex:1"><button class="btn btn-g btn-sm" onclick="addExpType()">+ เพิ่ม</button></div>
           <div id="exp-type-chips"></div>
         </div>
         <div class="g3">
@@ -526,16 +565,16 @@ body.dark .debt-name{color:#CE93D8}
           <div class="fg"><label class="flbl">หมายเหตุ</label><input type="text" id="exp-note" placeholder="รายละเอียด..."></div>
         </div>
         <button class="btn btn-o" onclick="addExp()">บันทึกค่าใช้จ่าย</button>
-        <div id="msg-exp" style="font-size:13px;font-weight:700;margin-top:5px"></div>
-        <div id="today-exps" style="margin-top:8px"></div>
+        <div id="msg-exp" style="font-size:12px;font-weight:700;margin-top:5px"></div>
+        <div id="today-exps" style="margin-top:7px"></div>
       </div>
       <div class="reset-zone">
         <p>⚠️ รีเซ็ตข้อมูลทั้งหมด — ใช้ก่อนเริ่มใช้งานจริงเท่านั้น!</p>
-        <div style="display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap">
-          <input type="password" id="reset-code" placeholder="ใส่รหัส..." style="width:120px;font-size:14px;padding:5px 9px">
+        <div style="display:flex;gap:5px;justify-content:center;align-items:center;flex-wrap:wrap">
+          <input type="password" id="reset-code" placeholder="ใส่รหัส..." style="width:110px;font-size:13px;padding:5px 8px">
           <button class="btn btn-r btn-sm" onclick="resetAllData()">🗑️ รีเซ็ต</button>
         </div>
-        <div id="msg-reset" style="font-size:12px;font-weight:700;margin-top:5px;text-align:center"></div>
+        <div id="msg-reset" style="font-size:11px;font-weight:700;margin-top:5px;text-align:center"></div>
       </div>
     </div>
   </div>
@@ -545,7 +584,7 @@ body.dark .debt-name{color:#CE93D8}
   <div class="modal-box">
     <div class="modal-title">📋 ปิดยอดประจำวัน</div>
     <div id="day-sum"></div>
-    <div style="font-size:13px;font-weight:700;color:#E65100;margin-bottom:5px">เพิ่มค่าใช้จ่ายวันนี้ (ไม่บังคับ)</div>
+    <div style="font-size:12px;font-weight:700;color:#E65100;margin-bottom:4px">เพิ่มค่าใช้จ่ายวันนี้ (ไม่บังคับ)</div>
     <div id="day-exp-row"><select id="day-exp-sel"></select><input type="number" id="day-exp-amt" placeholder="จำนวนเงิน" min="0"><button class="btn btn-o btn-sm" onclick="addDayExp()">+ เพิ่ม</button></div>
     <div id="day-exp-list"></div>
     <div class="mbtns">
@@ -556,34 +595,34 @@ body.dark .debt-name{color:#CE93D8}
 </div>
 <!-- CONFIRM PAY -->
 <div class="overlay" id="pay-overlay">
-  <div class="modal-box" style="max-width:340px;text-align:center">
-    <div style="font-size:36px;margin-bottom:6px">💳</div>
+  <div class="modal-box" style="max-width:320px;text-align:center">
+    <div style="font-size:34px;margin-bottom:5px">💳</div>
     <div class="modal-title">ยืนยันการชำระเงิน</div>
-    <div style="background:#F5F5F5;border-radius:10px;padding:14px;margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px">
+    <div style="background:#F5F5F5;border-radius:9px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
         <span style="color:#757575">ยอดที่ต้องจ่าย</span><span id="pay-net" style="font-weight:700"></span>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px">
         <span style="color:#757575">รับเงินมา</span><span id="pay-cash" style="font-weight:700;color:#1565C0"></span>
       </div>
-      <div style="border-top:2px solid #E0E0E0;padding-top:10px">
-        <div style="font-size:12px;color:#757575;margin-bottom:3px">เงินทอน</div>
-        <div id="pay-change" style="font-size:48px;font-weight:700;line-height:1.1"></div>
+      <div style="border-top:2px solid #E0E0E0;padding-top:9px">
+        <div style="font-size:11px;color:#757575;margin-bottom:3px">เงินทอน</div>
+        <div id="pay-change" style="font-size:44px;font-weight:700;line-height:1.1"></div>
       </div>
     </div>
-    <div style="font-size:11px;color:#9E9E9E;margin-bottom:10px">กด Enter หรือกดปุ่มยืนยัน</div>
+    <div style="font-size:11px;color:#9E9E9E;margin-bottom:9px">กด Enter หรือกดปุ่มยืนยัน</div>
     <div class="mbtns">
-      <button class="mbtn mbtn-g" id="pay-ok-btn" onclick="doCheckout()" style="font-size:16px">✅ ยืนยันชำระเงิน</button>
+      <button class="mbtn mbtn-g" id="pay-ok-btn" onclick="doCheckout()" style="font-size:15px">✅ ยืนยันชำระเงิน</button>
       <button class="mbtn mbtn-gray" onclick="closeModal('pay-overlay')">ยกเลิก</button>
     </div>
   </div>
 </div>
-<!-- DEBT MODAL (บันทึกเชื่อ) -->
+<!-- DEBT MODAL -->
 <div class="overlay" id="debt-overlay">
-  <div class="modal-box" style="max-width:380px">
+  <div class="modal-box" style="max-width:360px">
     <div class="modal-title">💳 บันทึกขายเชื่อ</div>
-    <div id="debt-cart-sum" style="margin-bottom:10px"></div>
-    <div class="fg"><label class="flbl">ชื่อลูกค้า</label><input type="text" id="debt-name-input" placeholder="ชื่อลูกค้า เช่น ป้าแดง, บ้านเลขที่ 5"></div>
+    <div id="debt-cart-sum" style="margin-bottom:9px"></div>
+    <div class="fg"><label class="flbl">ชื่อลูกค้า</label><input type="text" id="debt-name-input" placeholder="ชื่อลูกค้า เช่น ป้าแดง"></div>
     <div class="fg"><label class="flbl">หมายเหตุ (ไม่บังคับ)</label><input type="text" id="debt-note-input" placeholder="เช่น จะมาจ่ายพรุ่งนี้"></div>
     <div class="mbtns">
       <button class="mbtn" onclick="saveDebt()" style="background:#6A1B9A;color:#fff;flex:1">💳 บันทึกเชื่อ</button>
@@ -591,23 +630,23 @@ body.dark .debt-name{color:#CE93D8}
     </div>
   </div>
 </div>
-<!-- DEBT LIST MODAL -->
+<!-- DEBT LIST -->
 <div class="overlay" id="debt-list-overlay">
-  <div class="modal-box" style="max-width:500px">
+  <div class="modal-box" style="max-width:480px">
     <div class="modal-title">👤 รายการลูกหนี้เชื่อ</div>
-    <div id="debt-list-summary" style="margin-bottom:10px"></div>
+    <div id="debt-list-summary" style="margin-bottom:9px"></div>
     <div id="debt-list-content"></div>
-    <div class="mbtns" style="margin-top:10px">
+    <div class="mbtns" style="margin-top:9px">
       <button class="mbtn mbtn-gray" onclick="closeModal('debt-list-overlay')">ปิด</button>
     </div>
   </div>
 </div>
-<!-- DEBT PAY MODAL -->
+<!-- DEBT PAY -->
 <div class="overlay" id="debt-pay-overlay">
-  <div class="modal-box" style="max-width:360px;text-align:center">
-    <div style="font-size:36px;margin-bottom:6px">💰</div>
+  <div class="modal-box" style="max-width:340px;text-align:center">
+    <div style="font-size:34px;margin-bottom:5px">💰</div>
     <div class="modal-title">รับชำระหนี้</div>
-    <div id="debt-pay-info" style="margin-bottom:12px"></div>
+    <div id="debt-pay-info" style="margin-bottom:10px"></div>
     <div class="fg"><label class="flbl">จำนวนที่รับ (฿)</label><input type="number" id="debt-pay-amount" placeholder="0" min="0"></div>
     <div class="mbtns">
       <button class="mbtn mbtn-g" onclick="confirmDebtPay()">✅ ยืนยันรับเงิน</button>
@@ -617,21 +656,21 @@ body.dark .debt-name{color:#CE93D8}
 </div>
 <!-- BILL HISTORY -->
 <div class="overlay" id="bills-overlay">
-  <div class="modal-box" style="max-width:500px">
+  <div class="modal-box" style="max-width:480px">
     <div class="modal-title">📋 ประวัติบิลวันนี้</div>
     <div id="bills-content"></div>
-    <div class="mbtns" style="margin-top:10px">
+    <div class="mbtns" style="margin-top:9px">
       <button class="mbtn mbtn-gray" onclick="closeModal('bills-overlay')">ปิด</button>
     </div>
   </div>
 </div>
 <!-- EDIT BILL -->
 <div class="overlay" id="edit-bill-overlay">
-  <div class="modal-box" style="max-width:500px">
+  <div class="modal-box" style="max-width:480px">
     <div class="modal-title">✏️ แก้ไขบิลล่าสุด</div>
     <div class="info-note">แก้ไขจำนวนสินค้าในบิล — ตั้งเป็น 0 เพื่อลบออก</div>
     <div id="edit-bill-items"></div>
-    <div class="mbtns" style="margin-top:10px">
+    <div class="mbtns" style="margin-top:9px">
       <button class="mbtn mbtn-g" onclick="saveEditBill()">✅ บันทึกการแก้ไข</button>
       <button class="mbtn mbtn-gray" onclick="closeModal('edit-bill-overlay')">ยกเลิก</button>
     </div>
@@ -639,7 +678,7 @@ body.dark .debt-name{color:#CE93D8}
 </div>
 <!-- RESTOCK -->
 <div class="overlay" id="restock-overlay">
-  <div class="modal-box" style="max-width:480px">
+  <div class="modal-box" style="max-width:460px">
     <div class="modal-title" id="restock-title">📦 แก้ไข / เติมสต็อก</div>
     <div class="restock-section restock-cur">
       <div class="restock-title" style="color:#1B5E20">📋 สต็อกปัจจุบัน (แก้ไขได้)</div>
@@ -649,7 +688,7 @@ body.dark .debt-name{color:#CE93D8}
         <div class="restock-field"><label>จำนวนที่มีอยู่</label><input type="number" id="rc-stock" min="0"></div>
       </div>
     </div>
-    <div style="text-align:center;font-size:18px;margin:6px 0;color:#9E9E9E">+</div>
+    <div style="text-align:center;font-size:16px;margin:5px 0;color:#9E9E9E">+</div>
     <div class="restock-section restock-new">
       <div class="restock-title" style="color:#1565C0">🛒 สินค้าที่ซื้อมาเพิ่ม</div>
       <div class="restock-grid">
@@ -657,11 +696,11 @@ body.dark .debt-name{color:#CE93D8}
         <div class="restock-field"><label>ต้นทุน (฿)</label><input type="number" id="rn-cost" min="0" step="0.5"></div>
         <div class="restock-field"><label>จำนวนที่เติม</label><input type="number" id="rn-qty" min="0" placeholder="0"></div>
       </div>
-      <div style="font-size:11px;color:#1565C0;margin-top:5px">💡 ราคาในแถบนี้จะใช้เป็นราคาใหม่ของสินค้า</div>
+      <div style="font-size:10px;color:#1565C0;margin-top:4px">💡 ราคาในแถบนี้จะใช้เป็นราคาใหม่ของสินค้า</div>
     </div>
-    <div id="restock-preview" style="background:#FFF9C4;border-radius:8px;padding:8px;margin-top:8px;font-size:13px"></div>
-    <div id="restock-hist" style="margin-top:10px"></div>
-    <div class="mbtns" style="margin-top:10px">
+    <div id="restock-preview" style="background:#FFF9C4;border-radius:7px;padding:7px;margin-top:7px;font-size:12px"></div>
+    <div id="restock-hist" style="margin-top:8px"></div>
+    <div class="mbtns" style="margin-top:9px">
       <button class="mbtn mbtn-g" onclick="saveRestock()">✅ บันทึก</button>
       <button class="mbtn mbtn-gray" onclick="closeModal('restock-overlay')">ยกเลิก</button>
     </div>
@@ -673,9 +712,9 @@ body.dark .debt-name{color:#CE93D8}
     <div class="modal-title">📦 เก็บถาวรข้อมูลเก่า</div>
     <div class="warn-note">⚠️ ระบบจะ download ไฟล์ JSON ของปีที่เลือกก่อน แล้วลบออกจาก browser — สินค้าและสต็อกไม่หาย</div>
     <div class="fg"><label class="flbl">เลือกปีที่ต้องการเก็บถาวร (ค.ศ.)</label>
-      <select id="arch-sel" onchange="updateArchPreview()" style="max-width:240px"></select>
+      <select id="arch-sel" onchange="updateArchPreview()" style="max-width:220px"></select>
     </div>
-    <div id="arch-preview" style="margin:9px 0;min-height:40px"></div>
+    <div id="arch-preview" style="margin:8px 0;min-height:38px"></div>
     <div class="mbtns">
       <button class="mbtn mbtn-g" onclick="doArchive()">📦 เก็บถาวรและลบออก</button>
       <button class="mbtn mbtn-gray" onclick="closeModal('archive-overlay')">ยกเลิก</button>
@@ -684,12 +723,12 @@ body.dark .debt-name{color:#CE93D8}
 </div>
 <!-- THEME -->
 <div class="overlay" id="theme-overlay">
-  <div class="modal-box" style="max-width:320px">
+  <div class="modal-box" style="max-width:300px">
     <div class="modal-title">🎨 ธีมสีร้าน</div>
-    <div style="font-size:13px;font-weight:700;color:#757575;margin-bottom:8px">สีสำเร็จรูป — คลิกเพื่อเลือก</div>
+    <div style="font-size:12px;font-weight:700;color:#757575;margin-bottom:7px">สีสำเร็จรูป — คลิกเพื่อเลือก</div>
     <div class="theme-dots" id="theme-dots"></div>
-    <div style="font-size:13px;font-weight:700;color:#757575;margin-bottom:6px">กำหนดสีเอง</div>
-    <input type="color" id="theme-picker" style="width:60px;height:40px;border:none;border-radius:7px;cursor:pointer;padding:2px;margin-bottom:12px" oninput="previewThemeColor(this.value)">
+    <div style="font-size:12px;font-weight:700;color:#757575;margin-bottom:5px">กำหนดสีเอง</div>
+    <input type="color" id="theme-picker" style="width:56px;height:38px;border:none;border-radius:7px;cursor:pointer;padding:2px;margin-bottom:10px" oninput="previewThemeColor(this.value)">
     <div class="mbtns">
       <button class="mbtn mbtn-g" onclick="applyThemeFromPicker()">✅ ใช้สีนี้</button>
       <button class="mbtn mbtn-gray" onclick="cancelTheme()">ยกเลิก</button>
@@ -721,7 +760,7 @@ var DEF_EXP=['ค่าน้ำ','ค่าไฟ','ค่าน้ำแข็
 function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){alert('พื้นที่เก็บข้อมูลเต็ม กรุณาเก็บถาวรข้อมูลเก่า');}}
 
-var shopName=ld('shop_name','ร้านอา');
+var shopName=ld('shop_name','ล้านเพื่อน');
 var cats=ld('shop_cats',DEF_CATS);
 var prods=ld('shop_prods',DEF_PRODS).map(function(p){return Object.assign({hist:[]},p);});
 var salesLog=ld('shop_slog',[]);
@@ -731,7 +770,7 @@ var debts=ld('shop_debts',[]);
 var isDark=ld('shop_dark',false);
 var sortMode=ld('shop_sort','default');
 var themeColor=ld('shop_theme','#1B5E20');
-var cart=[],lastAct=null,activeCat='all',discType='bath',dayExps=[],yearChart=null;
+var cart=[],activeCat='all',discType='bath',dayExps=[],yearChart=null;
 var pendPid=null,pendTimer=null,srIdx=-1,srHits=[],restockPid=null,debtPayId=null;
 
 function todayStr(){return new Date().toISOString().split('T')[0];}
@@ -742,7 +781,7 @@ function fmtDate(s){if(!s) return '';var p=s.split('-');if(p.length!==3) return 
 function getCat(id){return cats.find(function(c){return c.id===id;})||{bg:'#78909C',name:'อื่นๆ'};}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
 
-/* MENU DROPDOWN */
+/* MENU */
 function toggleMenu(e){e.stopPropagation();document.getElementById('menu-dropdown').classList.toggle('open');}
 function closeMenu(){document.getElementById('menu-dropdown').classList.remove('open');}
 document.addEventListener('click',function(){closeMenu();});
@@ -752,8 +791,7 @@ function applyThemeColor(c){document.documentElement.style.setProperty('--tc',c)
 function previewThemeColor(c){applyThemeColor(c);}
 function openTheme(){
   applyThemeColor(themeColor);document.getElementById('theme-picker').value=themeColor;
-  var el=document.getElementById('theme-dots');
-  el.innerHTML=PRESETS.map(function(c){var on=c.toLowerCase()===themeColor.toLowerCase();return '<div class="theme-dot'+(on?' on':'')+'" style="background:'+c+'" data-c="'+c+'" onclick="pickThemeDot(this)"></div>';}).join('');
+  document.getElementById('theme-dots').innerHTML=PRESETS.map(function(c){var on=c.toLowerCase()===themeColor.toLowerCase();return '<div class="theme-dot'+(on?' on':'')+'" style="background:'+c+'" data-c="'+c+'" onclick="pickThemeDot(this)"></div>';}).join('');
   document.getElementById('theme-overlay').classList.add('on');
 }
 function pickThemeDot(el){var c=el.dataset.c;document.getElementById('theme-picker').value=c;applyThemeColor(c);document.querySelectorAll('.theme-dot').forEach(function(d){d.classList.toggle('on',d.dataset.c.toLowerCase()===c.toLowerCase());});}
@@ -769,8 +807,13 @@ function playKaching(){
   try{var ctx=new(window.AudioContext||window.webkitAudioContext)();[[0,1200,0.12],[0.05,1500,0.1],[0.1,1000,0.14],[0.15,1800,0.08]].forEach(function(x){var o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+x[0];o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(x[1],t);o.frequency.exponentialRampToValueAtTime(x[1]*0.7,t+x[2]);g.gain.setValueAtTime(0.35,t);g.gain.exponentialRampToValueAtTime(0.001,t+x[2]);o.start(t);o.stop(t+x[2]);});}catch(e){}
 }
 
-/* CLOCK */
-function tick(){var n=new Date(),days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],de=document.getElementById('dt-date'),te=document.getElementById('dt-time');if(de) de.textContent=days[n.getDay()]+' '+String(n.getDate()).padStart(2,'0')+' '+MONTHS[n.getMonth()+1]+' '+(n.getFullYear()+543);if(te) te.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');}
+/* CLOCK — topbar not showing clock on mobile to save space */
+function tick(){
+  var n=new Date(),days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  var de=document.getElementById('dt-date'),te=document.getElementById('dt-time');
+  if(de) de.textContent=days[n.getDay()]+' '+String(n.getDate()).padStart(2,'0')+' '+MONTHS[n.getMonth()+1]+' '+(n.getFullYear()+543);
+  if(te) te.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+}
 tick();setInterval(tick,1000);
 
 /* SHOP NAME */
@@ -795,8 +838,8 @@ function openBillHistory(){
   var ts=salesLog.filter(function(s){return s.date===todayStr();}),el=document.getElementById('bills-content');
   if(!ts.length){el.innerHTML='<div class="empty-msg">ยังไม่มีบิลวันนี้</div>';document.getElementById('bills-overlay').classList.add('on');return;}
   var validTotal=ts.filter(function(s){return !s.voided;}).reduce(function(a,s){return a+(s.net||0);},0);
-  var h='<div style="font-size:13px;color:#757575;margin-bottom:10px;font-weight:700">รวม '+ts.length+' บิล | ยอดสุทธิ <span style="color:var(--tc)">฿'+fmt(validTotal)+'</span></div>';
-  ts.slice().reverse().forEach(function(s,i){h+='<div class="bill-card'+(s.voided?' voided':'')+'"><div class="bill-hdr"><span class="bill-num">บิลที่ '+(ts.length-i)+(s.voided?' (ยกเลิก)':'')+(s.isDebt?' (เชื่อ)':'')+'</span><span class="bill-total">฿'+fmt(s.net)+'</span></div><div class="bill-list">'+s.items.map(function(it){return it.name+' x'+it.qty;}).join(', ')+'</div>'+(s.disc>0?'<div style="font-size:11px;color:#E65100;margin-top:2px">ส่วนลด ฿'+fmt(s.disc)+'</div>':'')+'</div>';});
+  var h='<div style="font-size:12px;color:#757575;margin-bottom:9px;font-weight:700">รวม '+ts.length+' บิล | ยอดสุทธิ <span style="color:var(--tc)">฿'+fmt(validTotal)+'</span></div>';
+  ts.slice().reverse().forEach(function(s,i){h+='<div class="bill-card'+(s.voided?' voided':'')+'"><div class="bill-hdr"><span class="bill-num">บิลที่ '+(ts.length-i)+(s.voided?' (ยกเลิก)':'')+(s.isDebt?' (เชื่อ)':'')+'</span><span class="bill-total">฿'+fmt(s.net)+'</span></div><div class="bill-list">'+s.items.map(function(it){return it.name+' x'+it.qty;}).join(', ')+'</div>'+(s.disc>0?'<div style="font-size:10px;color:#E65100;margin-top:2px">ส่วนลด ฿'+fmt(s.disc)+'</div>':'')+'</div>';});
   el.innerHTML=h;document.getElementById('bills-overlay').classList.add('on');
 }
 
@@ -807,7 +850,7 @@ function buildQuickBtns(){
   if(!top.length) top=prods.slice(0,5).map(function(p){return p.id;});
   var el=document.getElementById('quick-btns'),items=top.map(function(pid){return prods.find(function(p){return p.id===pid;});}).filter(Boolean);
   if(!items.length){el.innerHTML='';return;}
-  el.innerHTML='<span style="font-size:12px;font-weight:700;color:#888;flex-shrink:0">ขายด่วน ⚡</span>'+items.map(function(p){var cat=getCat(p.cat),isOut=p.stock<=0;return '<button class="qbtn-quick" data-pid="'+p.id+'" onclick="addById(this.dataset.pid)" style="background:'+cat.bg+';opacity:'+(isOut?.4:1)+'">'+(isOut?'⛔ ':'')+p.name+' ฿'+p.price+'</button>';}).join('');
+  el.innerHTML='<span style="font-size:11px;font-weight:700;color:#888;flex-shrink:0">ขายด่วน ⚡</span>'+items.map(function(p){var cat=getCat(p.cat),isOut=p.stock<=0;return '<button class="qbtn-quick" data-pid="'+p.id+'" onclick="addById(this.dataset.pid)" style="background:'+cat.bg+';opacity:'+(isOut?.4:1)+'">'+(isOut?'⛔ ':'')+p.name+' ฿'+p.price+'</button>';}).join('');
 }
 
 /* BACKUP WARN */
@@ -833,28 +876,28 @@ function searchPick(el){addById(el.dataset.pid);document.getElementById('search-
 function hideSearch(){setTimeout(function(){document.getElementById('search-results').style.display='none';srIdx=-1;},200);}
 
 /* CART */
-function addById(pid){var p=prods.find(function(x){return x.id===pid;});if(!p||p.stock<=0){showBanner('หมดสต็อก',true);return;}var item=cart.find(function(x){return x.pid===pid;});if(item){if(item.qty>=p.stock){showBanner('สต็อกไม่พอ เหลือ '+p.stock+' ชิ้น',true);return;}lastAct={t:'qty',pid:pid,old:item.qty};item.qty++;}else{lastAct={t:'add',pid:pid};cart.push({pid:pid,name:p.name,price:p.price,cost:p.cost,qty:1});}renderCart();}
+function addById(pid){var p=prods.find(function(x){return x.id===pid;});if(!p||p.stock<=0){showBanner('หมดสต็อก',true);return;}var item=cart.find(function(x){return x.pid===pid;});if(item){if(item.qty>=p.stock){showBanner('สต็อกไม่พอ เหลือ '+p.stock+' ชิ้น',true);return;}item.qty++;}else{cart.push({pid:pid,name:p.name,price:p.price,cost:p.cost,qty:1});}renderCart();}
 function tapProd(btn){addById(btn.dataset.pid);}
-function adjQty(pid,d){var item=cart.find(function(x){return x.pid===pid;});if(!item) return;if(d<0&&item.qty===1){if(pendPid===pid){clearTimeout(pendTimer);pendPid=null;cart=cart.filter(function(x){return x.pid!==pid;});renderCart();return;}pendPid=pid;pendTimer=setTimeout(function(){pendPid=null;renderCart();},2500);renderCart();return;}if(d>0){var p=prods.find(function(x){return x.id===pid;});if(p&&item.qty>=p.stock){showBanner('สต็อกไม่พอ',true);return;}}lastAct={t:'qty',pid:pid,old:item.qty};item.qty+=d;if(item.qty<=0) cart=cart.filter(function(x){return x.pid!==pid;});renderCart();}
+function adjQty(pid,d){var item=cart.find(function(x){return x.pid===pid;});if(!item) return;if(d<0&&item.qty===1){if(pendPid===pid){clearTimeout(pendTimer);pendPid=null;cart=cart.filter(function(x){return x.pid!==pid;});renderCart();return;}pendPid=pid;pendTimer=setTimeout(function(){pendPid=null;renderCart();},2500);renderCart();return;}if(d>0){var p=prods.find(function(x){return x.id===pid;});if(p&&item.qty>=p.stock){showBanner('สต็อกไม่พอ',true);return;}}item.qty+=d;if(item.qty<=0) cart=cart.filter(function(x){return x.pid!==pid;});renderCart();}
 function qClick(btn){adjQty(btn.dataset.pid,parseInt(btn.dataset.d));}
-function clearCart(){if(cart.length&&!confirm('ล้างตะกร้าทั้งหมด?')) return;pendPid=null;cart=[];lastAct=null;document.getElementById('cash-input').value='';document.getElementById('disc-input').value='';document.getElementById('disc-result').textContent='';document.getElementById('net-row').style.display='none';document.getElementById('change-val').textContent='-';renderCart();}
+function clearCart(){if(cart.length&&!confirm('ล้างตะกร้าทั้งหมด?')) return;pendPid=null;cart=[];document.getElementById('cash-input').value='';document.getElementById('disc-input').value='';document.getElementById('disc-result').textContent='';document.getElementById('net-row').style.display='none';document.getElementById('change-val').textContent='-';renderCart();}
 function cartGross(){return cart.reduce(function(a,x){return a+x.price*x.qty;},0);}
 function getDisc(){var raw=parseFloat(document.getElementById('disc-input').value)||0,base=cartGross();return discType==='pct'?Math.min(base,base*raw/100):Math.min(base,raw);}
 function cartNet(){return cartGross()-getDisc();}
-function renderCart(){var el=document.getElementById('cart-items');if(!cart.length){el.innerHTML='<div class="cart-empty-msg">กดสินค้าเพื่อเพิ่มในตะกร้า</div>';document.getElementById('total-val').textContent='฿ 0.00';document.getElementById('net-row').style.display='none';updatePayBtn();return;}el.innerHTML=cart.map(function(item){var isPend=pendPid===item.pid;return '<div class="ci"><div class="ci-info"><div class="ci-name">'+item.name+'</div><div class="ci-unit">฿'+fmt(item.price)+' / ชิ้น</div></div><div class="qrow"><button class="qbtn qminus'+(isPend?' pend':'')+'" data-pid="'+item.pid+'" data-d="-1" onclick="qClick(this)">−</button><span class="qnum">'+item.qty+'</span><button class="qbtn qplus" data-pid="'+item.pid+'" data-d="1" onclick="qClick(this)">+</button></div><div class="ci-sub">฿'+fmt(item.price*item.qty)+'</div></div>';}).join('');document.getElementById('total-val').textContent='฿ '+fmt(cartGross());calcDisc();calcChange();updatePayBtn();}
+function renderCart(){var el=document.getElementById('cart-items');if(!cart.length){el.innerHTML='<div class="cart-empty-msg">กดสินค้าเพื่อเพิ่มในตะกร้า</div>';document.getElementById('total-val').textContent='฿ 0.00';document.getElementById('net-row').style.display='none';updatePayBtn();return;}el.innerHTML=cart.map(function(item){var isPend=pendPid===item.pid;return '<div class="ci"><div class="ci-info"><div class="ci-name">'+item.name+'</div><div class="ci-unit">฿'+fmt(item.price)+'/ชิ้น</div></div><div class="qrow"><button class="qbtn qminus'+(isPend?' pend':'')+'" data-pid="'+item.pid+'" data-d="-1" onclick="qClick(this)">−</button><span class="qnum">'+item.qty+'</span><button class="qbtn qplus" data-pid="'+item.pid+'" data-d="1" onclick="qClick(this)">+</button></div><div class="ci-sub">฿'+fmt(item.price*item.qty)+'</div></div>';}).join('');document.getElementById('total-val').textContent='฿ '+fmt(cartGross());calcDisc();calcChange();updatePayBtn();}
 function setDiscType(t){discType=t;document.getElementById('disc-bath').className='disc-type-btn'+(t==='bath'?' on':'');document.getElementById('disc-pct').className='disc-type-btn'+(t==='pct'?' on':'');document.getElementById('disc-unit').textContent=t==='bath'?'฿':'%';calcDisc();}
 function calcDisc(){var disc=getDisc(),net=cartNet(),res=document.getElementById('disc-result'),nr=document.getElementById('net-row');if(disc>0){res.textContent='ลด ฿'+fmt(disc);nr.style.display='flex';document.getElementById('net-val').textContent='฿ '+fmt(net);}else{res.textContent='';nr.style.display='none';}calcChange();}
 function addCash(amount){var inp=document.getElementById('cash-input'),cur=parseFloat(inp.value)||0;inp.value=cur+amount;onCashInput();}
 function onCashInput(){calcChange();updatePayBtn();}
 function calcChange(){var cash=parseFloat(document.getElementById('cash-input').value)||0,el=document.getElementById('change-val');if(cash<=0){el.textContent='-';el.style.color=isDark?'#90CAF9':'#1565C0';return;}var ch=cash-cartNet();el.textContent=ch>=0?'฿ '+fmt(ch):'เงินไม่พอ';el.style.color=ch>=0?(isDark?'#90CAF9':'#1565C0'):'#B71C1C';}
 function updatePayBtn(){var cash=parseFloat(document.getElementById('cash-input').value)||0,btn=document.getElementById('btn-pay'),ok=cart.length>0&&cash>0;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.6';}
-function addCustom(){var name=document.getElementById('cust-name').value.trim(),price=parseFloat(document.getElementById('cust-price').value)||0;if(!name||price<=0){showBanner('กรุณาใส่ชื่อและราคา',true);return;}var cid='cx'+Date.now();lastAct={t:'add',pid:cid};cart.push({pid:cid,name:name+' *',price:price,cost:0,qty:1,custom:true});document.getElementById('cust-name').value='';document.getElementById('cust-price').value='';renderCart();}
+function addCustom(){var name=document.getElementById('cust-name').value.trim(),price=parseFloat(document.getElementById('cust-price').value)||0;if(!name||price<=0){showBanner('กรุณาใส่ชื่อและราคา',true);return;}var cid='cx'+Date.now();cart.push({pid:cid,name:name+' *',price:price,cost:0,qty:1,custom:true});document.getElementById('cust-name').value='';document.getElementById('cust-price').value='';renderCart();}
 function cashKeydown(e){if(e.key==='Enter'&&!document.getElementById('btn-pay').disabled){e.preventDefault();e.stopPropagation();openConfirmPay();}}
 
 /* CONFIRM PAY */
 function openConfirmPay(){if(document.getElementById('btn-pay').disabled) return;var net=cartNet(),cash=parseFloat(document.getElementById('cash-input').value)||0,ch=cash-net;document.getElementById('pay-net').textContent='฿ '+fmt(net);document.getElementById('pay-cash').textContent='฿ '+fmt(cash);var cel=document.getElementById('pay-change');cel.textContent=ch>=0?'฿ '+fmt(ch):'เงินไม่พอ';cel.style.color=ch>=0?'var(--tc)':'#B71C1C';document.getElementById('pay-overlay').classList.add('on');setTimeout(function(){var b=document.getElementById('pay-ok-btn');if(b) b.focus();},80);}
 function doCheckout(){closeModal('pay-overlay');if(!cart.length) return;var cash=parseFloat(document.getElementById('cash-input').value)||0;if(cash<=0) return;if(cash<cartNet()&&!confirm('เงินไม่พอ ยืนยันขายต่อ?')) return;commitSale(false);cart=[];renderCart();buildProds();buildQuickBtns();updateAlert();updateTodayBar();playKaching();showBanner('ขายสำเร็จ! 🎉',false);}
-function commitSale(isDebt){var disc=getDisc(),items=cart.map(function(x){return{pid:x.pid,name:x.name,qty:x.qty,price:x.price,cost:x.cost,sub:x.price*x.qty,subcost:x.cost*x.qty};});var gross=items.reduce(function(a,x){return a+x.sub;},0),cost=items.reduce(function(a,x){return a+x.subcost;},0),net=gross-disc,billId=genId();salesLog.push({id:billId,date:todayStr(),items:items,gross:gross,disc:disc,net:net,cost:cost,profit:net-cost,ts:Date.now(),voided:false,isDebt:isDebt});sv('shop_slog',salesLog);cart.forEach(function(item){if(item.custom) return;var p=prods.find(function(x){return x.id===item.pid;});if(p) p.stock=Math.max(0,p.stock-item.qty);});sv('shop_prods',prods);pendPid=null;lastAct=null;document.getElementById('cash-input').value='';document.getElementById('disc-input').value='';document.getElementById('disc-result').textContent='';document.getElementById('net-row').style.display='none';document.getElementById('change-val').textContent='-';return billId;}
+function commitSale(isDebt){var disc=getDisc(),items=cart.map(function(x){return{pid:x.pid,name:x.name,qty:x.qty,price:x.price,cost:x.cost,sub:x.price*x.qty,subcost:x.cost*x.qty};});var gross=items.reduce(function(a,x){return a+x.sub;},0),cost=items.reduce(function(a,x){return a+x.subcost;},0),net=gross-disc,billId=genId();salesLog.push({id:billId,date:todayStr(),items:items,gross:gross,disc:disc,net:net,cost:cost,profit:net-cost,ts:Date.now(),voided:false,isDebt:isDebt});sv('shop_slog',salesLog);cart.forEach(function(item){if(item.custom) return;var p=prods.find(function(x){return x.id===item.pid;});if(p) p.stock=Math.max(0,p.stock-item.qty);});sv('shop_prods',prods);pendPid=null;document.getElementById('cash-input').value='';document.getElementById('disc-input').value='';document.getElementById('disc-result').textContent='';document.getElementById('net-row').style.display='none';document.getElementById('change-val').textContent='-';return billId;}
 
 /* DEBT */
 function openDebtModal(){if(!cart.length){showBanner('ตะกร้าว่างเปล่า',true);return;}var net=cartNet(),disc=getDisc();var h='<div class="msum"><div class="mrow"><span>รายการสินค้า</span><span>'+cart.length+' รายการ</span></div>';if(disc>0) h+='<div class="mrow"><span>ส่วนลด</span><span style="color:#E65100">-฿'+fmt(disc)+'</span></div>';h+='<div class="mrow big"><span>ยอดเชื่อ</span><span style="color:#6A1B9A">฿'+fmt(net)+'</span></div></div>';document.getElementById('debt-cart-sum').innerHTML=h;document.getElementById('debt-name-input').value='';document.getElementById('debt-note-input').value='';document.getElementById('debt-overlay').classList.add('on');setTimeout(function(){document.getElementById('debt-name-input').focus();},100);}
@@ -862,10 +905,10 @@ function saveDebt(){var name=document.getElementById('debt-name-input').value.tr
 function openDebtListModal(){
   var active=debts.filter(function(d){return !d.paid;}),paid=debts.filter(function(d){return d.paid;});
   var total=active.reduce(function(a,d){return a+d.amount;},0);
-  document.getElementById('debt-list-summary').innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"><div class="stat-box" style="flex:1;min-width:110px"><div class="stat-lbl">ยอดค้างรวม</div><div class="stat-val" style="color:#B71C1C;font-size:18px">฿'+fmt(total)+'</div></div><div class="stat-box" style="flex:1;min-width:110px"><div class="stat-lbl">รายการค้าง</div><div class="stat-val" style="color:#6A1B9A;font-size:18px">'+active.length+' ราย</div></div></div>';
+  document.getElementById('debt-list-summary').innerHTML='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px"><div class="stat-box" style="flex:1;min-width:100px"><div class="stat-lbl">ยอดค้างรวม</div><div class="stat-val" style="color:#B71C1C;font-size:17px">฿'+fmt(total)+'</div></div><div class="stat-box" style="flex:1;min-width:100px"><div class="stat-lbl">รายการค้าง</div><div class="stat-val" style="color:#6A1B9A;font-size:17px">'+active.length+' ราย</div></div></div>';
   var h='';
-  if(active.length){h+='<div style="font-size:13px;font-weight:700;color:#6A1B9A;margin-bottom:7px">💳 ค้างชำระ ('+active.length+' ราย)</div>';active.slice().reverse().forEach(function(d){h+='<div class="debt-card"><div class="debt-hdr"><span class="debt-name">👤 '+d.name+'</span><span class="debt-amount">฿'+fmt(d.amount)+'</span></div><div class="debt-info">วันที่เชื่อ: '+fmtDate(d.date)+(d.note?' | '+d.note:'')+'</div><div class="debt-actions"><button class="btn btn-g btn-sm" data-did="'+d.id+'" onclick="openDebtPay(this.dataset.did)">💰 รับชำระ</button><button class="btn btn-r btn-sm" data-did="'+d.id+'" onclick="deleteDebt(this.dataset.did)">ลบ</button></div></div>';});}
-  if(paid.length){h+='<div style="font-size:13px;font-weight:700;color:#9E9E9E;margin:10px 0 7px">✅ ชำระแล้ว ('+paid.length+' ราย)</div>';paid.slice().reverse().slice(0,10).forEach(function(d){h+='<div class="debt-card paid"><div class="debt-hdr"><span class="debt-name" style="color:#9E9E9E">👤 '+d.name+'</span><span style="font-size:14px;font-weight:700;color:#9E9E9E">฿'+fmt(d.amount)+'</span></div><div class="debt-info">เชื่อ: '+fmtDate(d.date)+' | ชำระ: '+fmtDate(d.paidDate)+'</div></div>';});}
+  if(active.length){h+='<div style="font-size:12px;font-weight:700;color:#6A1B9A;margin-bottom:6px">💳 ค้างชำระ ('+active.length+' ราย)</div>';active.slice().reverse().forEach(function(d){h+='<div class="debt-card"><div class="debt-hdr"><span class="debt-name">👤 '+d.name+'</span><span class="debt-amount">฿'+fmt(d.amount)+'</span></div><div class="debt-info">วันที่เชื่อ: '+fmtDate(d.date)+(d.note?' | '+d.note:'')+'</div><div class="debt-actions"><button class="btn btn-g btn-sm" data-did="'+d.id+'" onclick="openDebtPay(this.dataset.did)">💰 รับชำระ</button><button class="btn btn-r btn-sm" data-did="'+d.id+'" onclick="deleteDebt(this.dataset.did)">ลบ</button></div></div>';});}
+  if(paid.length){h+='<div style="font-size:12px;font-weight:700;color:#9E9E9E;margin:9px 0 6px">✅ ชำระแล้ว ('+paid.length+' ราย)</div>';paid.slice().reverse().slice(0,10).forEach(function(d){h+='<div class="debt-card paid"><div class="debt-hdr"><span class="debt-name" style="color:#9E9E9E">👤 '+d.name+'</span><span style="font-size:13px;font-weight:700;color:#9E9E9E">฿'+fmt(d.amount)+'</span></div><div class="debt-info">เชื่อ: '+fmtDate(d.date)+' | ชำระ: '+fmtDate(d.paidDate)+'</div></div>';});}
   if(!debts.length) h='<div class="empty-msg">ยังไม่มีรายการเชื่อ</div>';
   document.getElementById('debt-list-content').innerHTML=h;
   document.getElementById('debt-list-overlay').classList.add('on');
@@ -875,26 +918,21 @@ function confirmDebtPay(){var d=debts.find(function(x){return x.id===debtPayId;}
 function deleteDebt(did){var d=debts.find(function(x){return x.id===did;});if(!d||!confirm('ลบรายการเชื่อของ "'+d.name+'" ใช่ไหม?')) return;debts=debts.filter(function(x){return x.id!==did;});sv('shop_debts',debts);openDebtListModal();}
 
 /* VOID / EDIT BILL */
-function renderLastBillInfo(){var el=document.getElementById('last-bill-info');if(!el) return;var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length){el.innerHTML='<div style="color:#9E9E9E;font-size:13px">ไม่มีบิลของวันนี้</div>';document.getElementById('void-btn').disabled=true;document.getElementById('edit-bill-btn').disabled=true;return;}var last=ts[ts.length-1];var h='<div class="msum"><div style="font-size:12px;font-weight:700;color:var(--tc);margin-bottom:4px">บิลล่าสุดวันนี้'+(last.isDebt?' (เชื่อ)':'')+'</div>';h+=last.items.map(function(it){return '<div class="mrow"><span>'+it.name+' x'+it.qty+'</span><span>฿'+fmt(it.sub)+'</span></div>';}).join('');h+='<div class="mrow big"><span>ยอดรวม</span><span style="color:var(--tc)">฿'+fmt(last.net)+'</span></div></div>';el.innerHTML=h;document.getElementById('void-btn').disabled=false;document.getElementById('edit-bill-btn').disabled=false;}
+function renderLastBillInfo(){var el=document.getElementById('last-bill-info');if(!el) return;var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length){el.innerHTML='<div style="color:#9E9E9E;font-size:12px">ไม่มีบิลของวันนี้</div>';document.getElementById('void-btn').disabled=true;document.getElementById('edit-bill-btn').disabled=true;return;}var last=ts[ts.length-1];var h='<div class="msum"><div style="font-size:11px;font-weight:700;color:var(--tc);margin-bottom:3px">บิลล่าสุดวันนี้'+(last.isDebt?' (เชื่อ)':'')+'</div>';h+=last.items.map(function(it){return '<div class="mrow"><span>'+it.name+' x'+it.qty+'</span><span>฿'+fmt(it.sub)+'</span></div>';}).join('');h+='<div class="mrow big"><span>ยอดรวม</span><span style="color:var(--tc)">฿'+fmt(last.net)+'</span></div></div>';el.innerHTML=h;document.getElementById('void-btn').disabled=false;document.getElementById('edit-bill-btn').disabled=false;}
 function voidLastBill(){var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length){showBanner('ไม่มีบิลที่จะยกเลิก',true);return;}if(!confirm('ยืนยันยกเลิกบิลล่าสุด? สต็อกจะคืนกลับอัตโนมัติ')) return;var last=ts[ts.length-1];last.voided=true;last.items.forEach(function(it){if(!it.pid.startsWith('cx')){var p=prods.find(function(x){return x.id===it.pid;});if(p) p.stock+=it.qty;}});if(last.isDebt){debts=debts.filter(function(d){return d.billId!==last.id;});sv('shop_debts',debts);}sv('shop_slog',salesLog);sv('shop_prods',prods);document.getElementById('msg-void').textContent='ยกเลิกบิลสำเร็จ คืนสต็อกแล้ว';document.getElementById('msg-void').style.color='var(--tc)';renderLastBillInfo();buildProds();updateAlert();updateTodayBar();}
-function openEditBill(){var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length){showBanner('ไม่มีบิลที่จะแก้ไข',true);return;}var last=ts[ts.length-1];var h=last.items.map(function(it,i){return '<div class="edit-bill-item"><div class="edit-bill-name">'+it.name+'<div style="font-size:11px;color:#9E9E9E">฿'+fmt(it.price)+'/ชิ้น</div></div><input class="edit-bill-qty" type="number" min="0" value="'+it.qty+'" data-idx="'+i+'" data-pid="'+it.pid+'"><div style="font-size:13px;color:#757575;min-width:55px;text-align:right">฿'+fmt(it.sub)+'</div></div>';}).join('');document.getElementById('edit-bill-items').innerHTML=h||'<div class="empty-msg">ไม่มีรายการ</div>';document.getElementById('edit-bill-overlay').classList.add('on');}
-function saveEditBill(){var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length) return;var last=ts[ts.length-1];var inputs=document.querySelectorAll('.edit-bill-qty');last.items.forEach(function(it){if(!it.pid.startsWith('cx')){var p=prods.find(function(x){return x.id===it.pid;});if(p) p.stock+=it.qty;}});var newItems=[];inputs.forEach(function(inp){var idx=parseInt(inp.dataset.idx),it=last.items[idx],newQty=Math.max(0,parseInt(inp.value)||0);if(newQty>0){newItems.push(Object.assign({},it,{qty:newQty,sub:it.price*newQty,subcost:it.cost*newQty}));if(!it.pid.startsWith('cx')){var p=prods.find(function(x){return x.id===it.pid;});if(p) p.stock=Math.max(0,p.stock-newQty);}}});if(!newItems.length){if(!confirm('บิลนี้จะไม่มีรายการเหลือ ต้องการยกเลิกบิลนี้แทนไหม?')) return;last.voided=true;sv('shop_slog',salesLog);sv('shop_prods',prods);closeModal('edit-bill-overlay');renderLastBillInfo();buildProds();updateAlert();updateTodayBar();return;}var gross=newItems.reduce(function(a,x){return a+x.sub;},0),cost=newItems.reduce(function(a,x){return a+x.subcost;},0),net=gross-(last.disc||0);last.items=newItems;last.gross=gross;last.net=net;last.cost=cost;last.profit=net-cost;if(last.isDebt){var d=debts.find(function(x){return x.billId===last.id;});if(d) d.amount=net;sv('shop_debts',debts);}sv('shop_slog',salesLog);sv('shop_prods',prods);closeModal('edit-bill-overlay');renderLastBillInfo();buildProds();updateAlert();updateTodayBar();showBanner('แก้ไขบิลสำเร็จ',false);}
+function openEditBill(){var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length){showBanner('ไม่มีบิลที่จะแก้ไข',true);return;}var last=ts[ts.length-1];var h=last.items.map(function(it,i){return '<div class="edit-bill-item"><div class="edit-bill-name">'+it.name+'<div style="font-size:10px;color:#9E9E9E">฿'+fmt(it.price)+'/ชิ้น</div></div><input class="edit-bill-qty" type="number" min="0" value="'+it.qty+'" data-idx="'+i+'" data-pid="'+it.pid+'"><div style="font-size:12px;color:#757575;min-width:50px;text-align:right">฿'+fmt(it.sub)+'</div></div>';}).join('');document.getElementById('edit-bill-items').innerHTML=h||'<div class="empty-msg">ไม่มีรายการ</div>';document.getElementById('edit-bill-overlay').classList.add('on');}
+function saveEditBill(){var ts=salesLog.filter(function(s){return s.date===todayStr()&&!s.voided;});if(!ts.length) return;var last=ts[ts.length-1],inputs=document.querySelectorAll('.edit-bill-qty');last.items.forEach(function(it){if(!it.pid.startsWith('cx')){var p=prods.find(function(x){return x.id===it.pid;});if(p) p.stock+=it.qty;}});var newItems=[];inputs.forEach(function(inp){var idx=parseInt(inp.dataset.idx),it=last.items[idx],newQty=Math.max(0,parseInt(inp.value)||0);if(newQty>0){newItems.push(Object.assign({},it,{qty:newQty,sub:it.price*newQty,subcost:it.cost*newQty}));if(!it.pid.startsWith('cx')){var p=prods.find(function(x){return x.id===it.pid;});if(p) p.stock=Math.max(0,p.stock-newQty);}}});if(!newItems.length){if(!confirm('บิลนี้จะไม่มีรายการเหลือ ต้องการยกเลิกบิลนี้แทนไหม?')) return;last.voided=true;sv('shop_slog',salesLog);sv('shop_prods',prods);closeModal('edit-bill-overlay');renderLastBillInfo();buildProds();updateAlert();updateTodayBar();return;}var gross=newItems.reduce(function(a,x){return a+x.sub;},0),cost=newItems.reduce(function(a,x){return a+x.subcost;},0),net=gross-(last.disc||0);last.items=newItems;last.gross=gross;last.net=net;last.cost=cost;last.profit=net-cost;if(last.isDebt){var d=debts.find(function(x){return x.billId===last.id;});if(d) d.amount=net;sv('shop_debts',debts);}sv('shop_slog',salesLog);sv('shop_prods',prods);closeModal('edit-bill-overlay');renderLastBillInfo();buildProds();updateAlert();updateTodayBar();showBanner('แก้ไขบิลสำเร็จ',false);}
 
 /* RESTOCK */
-function openRestock(pid){var p=prods.find(function(x){return x.id===pid;});if(!p) return;restockPid=pid;document.getElementById('restock-title').textContent='📦 แก้ไข / เติมสต็อก — '+p.name;document.getElementById('rc-price').value=p.price;document.getElementById('rc-cost').value=p.cost;document.getElementById('rc-stock').value=p.stock;document.getElementById('rn-price').value=p.price;document.getElementById('rn-cost').value=p.cost;document.getElementById('rn-qty').value='';updateRestockPreview();
-  var hist=p.hist||[];var histEl=document.getElementById('restock-hist');
-  if(hist.length){var last=hist[hist.length-1];histEl.innerHTML='<div style="background:#F9FBE7;border-radius:8px;padding:8px;font-size:12px"><div style="font-weight:700;color:#558B2F;margin-bottom:4px">📅 การเติมล่าสุด</div><div style="color:#757575">วันที่: '+fmtDate(last.date)+' | เติม: <b>'+last.addQty+'</b> ชิ้น | ราคา: ฿'+fmt(last.newPrice)+' | ทุน: ฿'+fmt(last.newCost)+'</div></div>';}
-  else histEl.innerHTML='<div style="font-size:12px;color:#9E9E9E">ยังไม่มีประวัติการเติมสต็อก</div>';
-  document.getElementById('restock-overlay').classList.add('on');
-}
+function openRestock(pid){var p=prods.find(function(x){return x.id===pid;});if(!p) return;restockPid=pid;document.getElementById('restock-title').textContent='📦 แก้ไข / เติมสต็อก — '+p.name;document.getElementById('rc-price').value=p.price;document.getElementById('rc-cost').value=p.cost;document.getElementById('rc-stock').value=p.stock;document.getElementById('rn-price').value=p.price;document.getElementById('rn-cost').value=p.cost;document.getElementById('rn-qty').value='';updateRestockPreview();var hist=p.hist||[],histEl=document.getElementById('restock-hist');if(hist.length){var last=hist[hist.length-1];histEl.innerHTML='<div style="background:#F9FBE7;border-radius:7px;padding:7px;font-size:11px"><div style="font-weight:700;color:#558B2F;margin-bottom:3px">📅 การเติมล่าสุด</div><div style="color:#757575">วันที่: '+fmtDate(last.date)+' | เติม: <b>'+last.addQty+'</b> ชิ้น | ราคา: ฿'+fmt(last.newPrice)+' | ทุน: ฿'+fmt(last.newCost)+'</div></div>';}else histEl.innerHTML='<div style="font-size:11px;color:#9E9E9E">ยังไม่มีประวัติการเติมสต็อก</div>';document.getElementById('restock-overlay').classList.add('on');}
 function updateRestockPreview(){var rcP=parseFloat(document.getElementById('rc-price').value)||0,rcC=parseFloat(document.getElementById('rc-cost').value)||0,rcS=parseInt(document.getElementById('rc-stock').value)||0,rnP=parseFloat(document.getElementById('rn-price').value)||0,rnC=parseFloat(document.getElementById('rn-cost').value)||0,rnQ=parseInt(document.getElementById('rn-qty').value)||0,fS=rcS+rnQ,fP=rnQ>0?rnP:rcP,fC=rnQ>0?rnC:rcC;document.getElementById('restock-preview').innerHTML='<span style="font-weight:700">ผลลัพธ์หลังบันทึก: </span>สต็อก <b>'+fS+'</b> ชิ้น | ราคาขาย <b>฿'+fmt(fP)+'</b> | ต้นทุน <b>฿'+fmt(fC)+'</b>';}
 function saveRestock(){var p=prods.find(function(x){return x.id===restockPid;});if(!p) return;var rcP=parseFloat(document.getElementById('rc-price').value)||0,rcC=parseFloat(document.getElementById('rc-cost').value)||0,rcS=parseInt(document.getElementById('rc-stock').value)||0,rnP=parseFloat(document.getElementById('rn-price').value)||0,rnC=parseFloat(document.getElementById('rn-cost').value)||0,rnQ=parseInt(document.getElementById('rn-qty').value)||0;if(rcP<=0){alert('กรุณาใส่ราคาขาย');return;}var fP=rnQ>0?rnP:rcP,fC=rnQ>0?rnC:rcC;if(fP<=0){alert('กรุณาใส่ราคาขาย');return;}p.hist=p.hist||[];if(rnQ>0) p.hist.push({date:todayStr(),oldPrice:p.price,oldCost:p.cost,oldStock:p.stock,addQty:rnQ,newPrice:fP,newCost:fC});p.price=fP;p.cost=fC;p.stock=rcS+rnQ;sv('shop_prods',prods);closeModal('restock-overlay');renderAdminProds();buildProds();buildQuickBtns();updateAlert();showBanner('บันทึกสต็อกสำเร็จ',false);}
 
 /* RESET */
-function resetAllData(){var code=document.getElementById('reset-code').value.trim(),mel=document.getElementById('msg-reset');if(code!=='381509'){mel.textContent='รหัสไม่ถูกต้อง';mel.style.color='#B71C1C';return;}if(!confirm('ยืนยันรีเซ็ตข้อมูลทั้งหมด?\nจะลบ: ยอดขาย, ค่าใช้จ่าย, ลูกหนี้\nจะเก็บ: สินค้า, หมวดหมู่, ชื่อร้าน')) return;salesLog=[];expsLog=[];debts=[];sv('shop_slog',salesLog);sv('shop_exps',expsLog);sv('shop_debts',debts);sv('last_backup_date',null);document.getElementById('reset-code').value='';mel.textContent='รีเซ็ตสำเร็จ! พร้อมใช้งานจริงแล้ว';mel.style.color='var(--tc)';updateTodayBar();renderLastBillInfo();}
+function resetAllData(){var code=document.getElementById('reset-code').value.trim(),mel=document.getElementById('msg-reset');if(code!=='381509'){mel.textContent='รหัสไม่ถูกต้อง';mel.style.color='#B71C1C';return;}if(!confirm('ยืนยันรีเซ็ตข้อมูลทั้งหมด?\nจะลบ: ยอดขาย, ค่าใช้จ่าย, ลูกหนี้\nจะเก็บ: สินค้า, หมวดหมู่, ชื่อร้าน')) return;salesLog=[];expsLog=[];debts=[];sv('shop_slog',salesLog);sv('shop_exps',expsLog);sv('shop_debts',debts);sv('last_backup_date',null);document.getElementById('reset-code').value='';mel.textContent='รีเซ็ตสำเร็จ!';mel.style.color='var(--tc)';updateTodayBar();renderLastBillInfo();}
 
 /* CLOSE DAY */
-function openDayModal(){dayExps=[];document.getElementById('day-exp-list').textContent='';document.getElementById('day-exp-amt').value='';var today=todayStr(),ts=salesLog.filter(function(s){return s.date===today&&!s.voided;});if(!cart.length&&!ts.length&&!confirm('วันนี้ยังไม่มีรายการขาย ยืนยันปิดยอดต่อไหม?')) return;var rev=ts.filter(function(s){return !s.isDebt;}).reduce(function(a,s){return a+s.net;},0),debtRev=ts.filter(function(s){return s.isDebt;}).reduce(function(a,s){return a+s.net;},0),cst=ts.reduce(function(a,s){return a+s.cost;},0),pft=ts.reduce(function(a,s){return a+s.profit;},0),dsc=ts.reduce(function(a,s){return a+(s.disc||0);},0);var h='<div class="msum"><div style="font-size:12px;font-weight:700;color:var(--tc);margin-bottom:4px">'+today+'</div><div class="mrow"><span>จำนวนบิล</span><span>'+ts.length+(cart.length?' (+1 ค้างอยู่)':'')+' บิล</span></div><div class="mrow"><span>ยอดรับเงินสด</span><span style="color:var(--tc)">฿ '+fmt(rev)+'</span></div>';if(debtRev>0) h+='<div class="mrow"><span>ยอดเชื่อ</span><span style="color:#6A1B9A">฿ '+fmt(debtRev)+'</span></div>';if(dsc>0) h+='<div class="mrow"><span>ส่วนลดรวม</span><span style="color:#E65100">-฿ '+fmt(dsc)+'</span></div>';h+='<div class="mrow"><span>ต้นทุนรวม</span><span style="color:#B71C1C">฿ '+fmt(cst)+'</span></div><div class="mrow big"><span>กำไรขั้นต้น</span><span style="color:#1565C0">฿ '+fmt(pft)+'</span></div></div>';document.getElementById('day-sum').innerHTML=h;fillDayExpSel();document.getElementById('day-overlay').classList.add('on');}
+function openDayModal(){dayExps=[];document.getElementById('day-exp-list').textContent='';document.getElementById('day-exp-amt').value='';var today=todayStr(),ts=salesLog.filter(function(s){return s.date===today&&!s.voided;});if(!cart.length&&!ts.length&&!confirm('วันนี้ยังไม่มีรายการขาย ยืนยันปิดยอดต่อไหม?')) return;var rev=ts.filter(function(s){return !s.isDebt;}).reduce(function(a,s){return a+s.net;},0),debtRev=ts.filter(function(s){return s.isDebt;}).reduce(function(a,s){return a+s.net;},0),cst=ts.reduce(function(a,s){return a+s.cost;},0),pft=ts.reduce(function(a,s){return a+s.profit;},0),dsc=ts.reduce(function(a,s){return a+(s.disc||0);},0);var h='<div class="msum"><div style="font-size:11px;font-weight:700;color:var(--tc);margin-bottom:3px">'+today+'</div><div class="mrow"><span>จำนวนบิล</span><span>'+ts.length+(cart.length?' (+1 ค้างอยู่)':'')+' บิล</span></div><div class="mrow"><span>ยอดรับเงินสด</span><span style="color:var(--tc)">฿ '+fmt(rev)+'</span></div>';if(debtRev>0) h+='<div class="mrow"><span>ยอดเชื่อ</span><span style="color:#6A1B9A">฿ '+fmt(debtRev)+'</span></div>';if(dsc>0) h+='<div class="mrow"><span>ส่วนลดรวม</span><span style="color:#E65100">-฿ '+fmt(dsc)+'</span></div>';h+='<div class="mrow"><span>ต้นทุนรวม</span><span style="color:#B71C1C">฿ '+fmt(cst)+'</span></div><div class="mrow big"><span>กำไรขั้นต้น</span><span style="color:#1565C0">฿ '+fmt(pft)+'</span></div></div>';document.getElementById('day-sum').innerHTML=h;fillDayExpSel();document.getElementById('day-overlay').classList.add('on');}
 function addDayExp(){var amt=parseFloat(document.getElementById('day-exp-amt').value)||0;if(amt<=0) return;dayExps.push({type:document.getElementById('day-exp-sel').value,amount:amt});document.getElementById('day-exp-amt').value='';document.getElementById('day-exp-list').textContent=dayExps.map(function(e){return e.type+': ฿'+fmt(e.amount);}).join(' | ');}
 function confirmCloseDay(){var today=todayStr();if(cart.length){var items=cart.map(function(x){return{pid:x.pid,name:x.name,qty:x.qty,price:x.price,cost:x.cost,sub:x.price*x.qty,subcost:x.cost*x.qty};});var gross=items.reduce(function(a,x){return a+x.sub;},0),cost=items.reduce(function(a,x){return a+x.subcost;},0);salesLog.push({id:genId(),date:today,items:items,gross:gross,disc:0,net:gross,cost:cost,profit:gross-cost,ts:Date.now(),voided:false,isDebt:false});cart.forEach(function(item){if(item.custom) return;var p=prods.find(function(x){return x.id===item.pid;});if(p) p.stock=Math.max(0,p.stock-item.qty);});sv('shop_prods',prods);cart=[];renderCart();buildProds();}dayExps.forEach(function(e){expsLog.push({id:genId(),date:today,type:e.type,amount:e.amount,note:''});});sv('shop_slog',salesLog);sv('shop_exps',expsLog);closeModal('day-overlay');updateAlert();updateTodayBar();alert('ปิดยอดสำเร็จ! บันทึกข้อมูลวัน '+today+' เรียบร้อยแล้ว');}
 
@@ -910,11 +948,11 @@ function showBanner(txt,isErr){var el=document.getElementById('alert-bar'),ot=el
 /* REPORT */
 function initRpt(){document.getElementById('rpt-m').value=new Date().getMonth()+1;document.getElementById('rpt-y').value=new Date().getFullYear();document.getElementById('rpt-yy').value=new Date().getFullYear();}
 function switchTab(t){document.getElementById('tab-m').className='rpt-tab'+(t==='m'?' on':'');document.getElementById('tab-y').className='rpt-tab'+(t==='y'?' on':'');document.getElementById('panel-m').style.display=t==='m'?'block':'none';document.getElementById('panel-y').style.display=t==='y'?'block':'none';if(t==='y') renderYear();}
-function meter(rev,net,elId){var el=document.getElementById(elId);if(rev===0){el.innerHTML='';return;}var pct=net/rev*100,bg=net>=0?'#E8F5E9':'#FFEBEE',color=net>=0?'var(--tc)':'#B71C1C';el.innerHTML='<div class="pmeter" style="background:'+bg+'"><div style="font-size:32px;flex-shrink:0">'+(net>=0?'📈':'📉')+'</div><div><div class="pmeter-pct" style="color:'+color+'">'+pct.toFixed(1)+'%</div><div class="pmeter-lbl" style="color:'+color+'">% กำไรสุทธิ '+(net>=0?'(กำไร)':'(ขาดทุน)')+'</div></div></div>';}
+function meter(rev,net,elId){var el=document.getElementById(elId);if(rev===0){el.innerHTML='';return;}var pct=net/rev*100,bg=net>=0?'#E8F5E9':'#FFEBEE',color=net>=0?'var(--tc)':'#B71C1C';el.innerHTML='<div class="pmeter" style="background:'+bg+'"><div style="font-size:28px;flex-shrink:0">'+(net>=0?'📈':'📉')+'</div><div><div class="pmeter-pct" style="color:'+color+'">'+pct.toFixed(1)+'%</div><div class="pmeter-lbl" style="color:'+color+'">% กำไรสุทธิ '+(net>=0?'(กำไร)':'(ขาดทุน)')+'</div></div></div>';}
 function getMonthStats(m,y){var ms=salesLog.filter(function(s){var d=new Date(s.date);return d.getMonth()+1===m&&d.getFullYear()===y&&!s.voided;}),me=expsLog.filter(function(e){var d=new Date(e.date);return d.getMonth()+1===m&&d.getFullYear()===y;});var rev=ms.reduce(function(a,s){return a+(s.net||0);},0),pft=ms.reduce(function(a,s){return a+s.profit;},0),exp=me.reduce(function(a,e){return a+e.amount;},0),net=pft-exp;return{rev:rev,pft:pft,exp:exp,net:net,bills:ms.length,ms:ms,me:me};}
 function renderCompare(m,y){var pm=m===1?12:m-1,py=m===1?y-1:y,cur=getMonthStats(m,y),prv=getMonthStats(pm,py),el=document.getElementById('m-compare');function box(lbl,cv,pv,isMoney){var diff=cv-pv,pct=pv>0?((diff/pv)*100):0,up=diff>0,eq=diff===0,sign=up?'↑':eq?'→':'↓',cls=up?'up':eq?'eq':'dn',valStr=isMoney?'฿'+fmt(cv):cv.toString(),diffStr=eq?'เท่าเดิม':(sign+' '+Math.abs(pct).toFixed(1)+'%');return '<div class="cmp-box"><div class="cmp-lbl">'+lbl+'</div><div class="cmp-val" style="color:var(--tc)">'+valStr+'</div><div class="cmp-diff '+cls+'">'+diffStr+' vs เดือนก่อน</div></div>';}el.innerHTML=box('ยอดขายสุทธิ',cur.rev,prv.rev,true)+box('กำไรสุทธิ',cur.net,prv.net,true)+box('จำนวนบิล',cur.bills,prv.bills,false);}
-function renderMonth(){var m=parseInt(document.getElementById('rpt-m').value),y=parseInt(document.getElementById('rpt-y').value),st=getMonthStats(m,y),ms=st.ms,me=st.me,rev=st.rev,pft=st.pft,exp=st.exp,net=st.net;meter(rev,net,'m-meter');document.getElementById('m-stats').innerHTML='<div class="stat-box"><div class="stat-lbl">ยอดขายสุทธิ</div><div class="stat-val" style="color:var(--tc)">฿'+fmt(rev)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรขั้นต้น</div><div class="stat-val" style="color:#1565C0">฿'+fmt(pft)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรสุทธิ</div><div class="stat-val" style="color:'+(net>=0?'var(--tc)':'#B71C1C')+'">฿'+fmt(net)+'</div></div>';renderCompare(m,y);var cnt={};ms.forEach(function(s){s.items.forEach(function(it){cnt[it.name]=(cnt[it.name]||0)+it.qty;});});var top=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];}).slice(0,5),mx=top.length?top[0][1]:1,rk=['rk1','rk2','rk3','rk4','rk5'];document.getElementById('m-top5').innerHTML=top.length?top.map(function(e,i){return '<div class="t5row"><div class="t5rank '+rk[i]+'">'+(i+1)+'</div><div style="flex:1"><div style="font-weight:700;font-size:13px">'+e[0]+'</div><div class="t5bar"><div class="t5fill" style="width:'+(e[1]/mx*100).toFixed(0)+'%"></div></div></div><div style="font-weight:700;color:var(--tc);font-size:13px">'+e[1]+' ชิ้น</div></div>';}).join(''):'<div class="empty-msg">ยังไม่มีข้อมูล</div>';var etot={};me.forEach(function(e){etot[e.type]=(etot[e.type]||0)+e.amount;});document.getElementById('m-exp').innerHTML=me.length?'<table><thead><tr><th>ประเภท</th><th class="nr">จำนวน (฿)</th></tr></thead><tbody>'+Object.entries(etot).map(function(e){return '<tr><td>'+e[0]+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e[1])+'</td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td style="font-weight:700">รวม</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(exp)+'</td></tr></tbody></table>':'<div class="empty-msg">ไม่มีค่าใช้จ่าย</div>';var days={};ms.forEach(function(s){if(!days[s.date]) days[s.date]={rev:0,pft:0,bills:0};days[s.date].rev+=(s.net||0);days[s.date].pft+=s.profit;days[s.date].bills++;});var dl=Object.entries(days).sort(function(a,b){return a[0]<b[0]?-1:1;});document.getElementById('m-daily').innerHTML=dl.length?'<table><thead><tr><th>วันที่</th><th class="nr">บิล</th><th class="nr">ยอดขาย (฿)</th><th class="nr">กำไร (฿)</th></tr></thead><tbody>'+dl.map(function(e){return '<tr><td>'+fmtDate(e[0])+'</td><td class="nr">'+e[1].bills+'</td><td class="nr" style="color:var(--tc);font-weight:700">'+fmt(e[1].rev)+'</td><td class="nr" style="color:#1565C0;font-weight:700">'+fmt(e[1].pft)+'</td></tr>';}).join('')+'</tbody></table>':'<div class="empty-msg">ไม่มีข้อมูลเดือนนี้</div>';}
-function renderYear(){var y=parseInt(document.getElementById('rpt-yy').value),ys=salesLog.filter(function(s){return new Date(s.date).getFullYear()===y&&!s.voided;}),ye=expsLog.filter(function(e){return new Date(e.date).getFullYear()===y;});var tR=ys.reduce(function(a,s){return a+(s.net||0);},0),tP=ys.reduce(function(a,s){return a+s.profit;},0),tE=ye.reduce(function(a,e){return a+e.amount;},0),tN=tP-tE;meter(tR,tN,'y-meter');document.getElementById('y-stats').innerHTML='<div class="stat-box"><div class="stat-lbl">ยอดขายสุทธิรวมปี</div><div class="stat-val" style="color:var(--tc)">฿'+fmt(tR)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรขั้นต้นรวมปี</div><div class="stat-val" style="color:#1565C0">฿'+fmt(tP)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรสุทธิรวมปี</div><div class="stat-val" style="color:'+(tN>=0?'var(--tc)':'#B71C1C')+'">฿'+fmt(tN)+'</div></div>';var mR=[],mP=[],mL=[];for(var m=1;m<=12;m++){var ms2=ys.filter(function(s){return new Date(s.date).getMonth()+1===m;}),me2=ye.filter(function(e){return new Date(e.date).getMonth()+1===m;});mR.push(parseFloat(ms2.reduce(function(a,s){return a+(s.net||0);},0).toFixed(2)));mP.push(parseFloat((ms2.reduce(function(a,s){return a+s.profit;},0)-me2.reduce(function(a,e){return a+e.amount;},0)).toFixed(2)));mL.push(MONTHS[m].slice(0,3));}var canvas=document.getElementById('year-chart');if(yearChart) yearChart.destroy();var tc=isDark?'#ccc':'#555';yearChart=new Chart(canvas,{type:'bar',data:{labels:mL,datasets:[{label:'ยอดขาย',data:mR,backgroundColor:'rgba(46,125,50,.75)',borderColor:'#2E7D32',borderWidth:1},{label:'กำไรสุทธิ',data:mP,backgroundColor:'rgba(21,101,192,.65)',borderColor:'#1565C0',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:tc}}},scales:{y:{ticks:{font:{size:10},color:tc},grid:{color:isDark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)'}},x:{ticks:{font:{size:10},color:tc}}}}});var rows='<table><thead><tr><th>เดือน</th><th class="nr">บิล</th><th class="nr">ยอดขาย (฿)</th><th class="nr">กำไรขั้นต้น (฿)</th><th class="nr">ค่าใช้จ่าย (฿)</th><th class="nr">กำไรสุทธิ (฿)</th></tr></thead><tbody>',gR=0,gP=0,gE=0,gN=0,gB=0;for(var m=1;m<=12;m++){var ms=ys.filter(function(s){return new Date(s.date).getMonth()+1===m;}),me=ye.filter(function(e){return new Date(e.date).getMonth()+1===m;}),r=ms.reduce(function(a,s){return a+(s.net||0);},0),p=ms.reduce(function(a,s){return a+s.profit;},0),e=me.reduce(function(a,x){return a+x.amount;},0),n=p-e,b=ms.length;gR+=r;gP+=p;gE+=e;gN+=n;gB+=b;rows+='<tr><td>'+MONTHS[m]+'</td><td class="nr">'+b+'</td><td class="nr" style="color:var(--tc);font-weight:700">'+fmt(r)+'</td><td class="nr" style="color:#1565C0">'+fmt(p)+'</td><td class="nr" style="color:#B71C1C">'+fmt(e)+'</td><td class="nr" style="color:'+(n>=0?'var(--tc)':'#B71C1C')+';font-weight:700">'+fmt(n)+'</td></tr>';}rows+='<tr style="background:#E8F5E9;font-weight:700"><td>รวมทั้งปี</td><td class="nr">'+gB+'</td><td class="nr" style="color:var(--tc)">'+fmt(gR)+'</td><td class="nr" style="color:#1565C0">'+fmt(gP)+'</td><td class="nr" style="color:#B71C1C">'+fmt(gE)+'</td><td class="nr" style="color:'+(gN>=0?'var(--tc)':'#B71C1C')+'">'+fmt(gN)+'</td></tr></tbody></table>';document.getElementById('y-monthly').innerHTML=rows;var cnt={};ys.forEach(function(s){s.items.forEach(function(it){cnt[it.name]=(cnt[it.name]||0)+it.qty;});});var top=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];}).slice(0,10),mx=top.length?top[0][1]:1,rk=['rk1','rk2','rk3','rk4','rk5'];document.getElementById('y-top10').innerHTML=top.length?top.map(function(e,i){return '<div class="t5row"><div class="t5rank '+(rk[i]||'rk5')+'">'+(i+1)+'</div><div style="flex:1"><div style="font-weight:700;font-size:13px">'+e[0]+'</div><div class="t5bar"><div class="t5fill" style="width:'+(e[1]/mx*100).toFixed(0)+'%"></div></div></div><div style="font-weight:700;color:var(--tc);font-size:13px">'+e[1]+' ชิ้น</div></div>';}).join(''):'<div class="empty-msg">ยังไม่มีข้อมูล</div>';var etot={};ye.forEach(function(e){etot[e.type]=(etot[e.type]||0)+e.amount;});document.getElementById('y-exptbl').innerHTML=ye.length?'<table><thead><tr><th>ประเภท</th><th class="nr">รวมทั้งปี (฿)</th></tr></thead><tbody>'+Object.entries(etot).sort(function(a,b){return b[1]-a[1];}).map(function(e){return '<tr><td>'+e[0]+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e[1])+'</td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td style="font-weight:700">รวมทั้งหมด</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(tE)+'</td></tr></tbody></table>':'<div class="empty-msg">ไม่มีข้อมูลค่าใช้จ่าย</div>';}
+function renderMonth(){var m=parseInt(document.getElementById('rpt-m').value),y=parseInt(document.getElementById('rpt-y').value),st=getMonthStats(m,y),ms=st.ms,me=st.me,rev=st.rev,pft=st.pft,exp=st.exp,net=st.net;meter(rev,net,'m-meter');document.getElementById('m-stats').innerHTML='<div class="stat-box"><div class="stat-lbl">ยอดขายสุทธิ</div><div class="stat-val" style="color:var(--tc)">฿'+fmt(rev)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรขั้นต้น</div><div class="stat-val" style="color:#1565C0">฿'+fmt(pft)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรสุทธิ</div><div class="stat-val" style="color:'+(net>=0?'var(--tc)':'#B71C1C')+'">฿'+fmt(net)+'</div></div>';renderCompare(m,y);var cnt={};ms.forEach(function(s){s.items.forEach(function(it){cnt[it.name]=(cnt[it.name]||0)+it.qty;});});var top=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];}).slice(0,5),mx=top.length?top[0][1]:1,rk=['rk1','rk2','rk3','rk4','rk5'];document.getElementById('m-top5').innerHTML=top.length?top.map(function(e,i){return '<div class="t5row"><div class="t5rank '+rk[i]+'">'+(i+1)+'</div><div style="flex:1"><div style="font-weight:700;font-size:12px">'+e[0]+'</div><div class="t5bar"><div class="t5fill" style="width:'+(e[1]/mx*100).toFixed(0)+'%"></div></div></div><div style="font-weight:700;color:var(--tc);font-size:12px">'+e[1]+' ชิ้น</div></div>';}).join(''):'<div class="empty-msg">ยังไม่มีข้อมูล</div>';var etot={};me.forEach(function(e){etot[e.type]=(etot[e.type]||0)+e.amount;});document.getElementById('m-exp').innerHTML=me.length?'<table><thead><tr><th>ประเภท</th><th class="nr">จำนวน (฿)</th></tr></thead><tbody>'+Object.entries(etot).map(function(e){return '<tr><td>'+e[0]+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e[1])+'</td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td style="font-weight:700">รวม</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(exp)+'</td></tr></tbody></table>':'<div class="empty-msg">ไม่มีค่าใช้จ่าย</div>';var days={};ms.forEach(function(s){if(!days[s.date]) days[s.date]={rev:0,pft:0,bills:0};days[s.date].rev+=(s.net||0);days[s.date].pft+=s.profit;days[s.date].bills++;});var dl=Object.entries(days).sort(function(a,b){return a[0]<b[0]?-1:1;});document.getElementById('m-daily').innerHTML=dl.length?'<table><thead><tr><th>วันที่</th><th class="nr">บิล</th><th class="nr">ยอดขาย (฿)</th><th class="nr">กำไร (฿)</th></tr></thead><tbody>'+dl.map(function(e){return '<tr><td>'+fmtDate(e[0])+'</td><td class="nr">'+e[1].bills+'</td><td class="nr" style="color:var(--tc);font-weight:700">'+fmt(e[1].rev)+'</td><td class="nr" style="color:#1565C0;font-weight:700">'+fmt(e[1].pft)+'</td></tr>';}).join('')+'</tbody></table>':'<div class="empty-msg">ไม่มีข้อมูลเดือนนี้</div>';}
+function renderYear(){var y=parseInt(document.getElementById('rpt-yy').value),ys=salesLog.filter(function(s){return new Date(s.date).getFullYear()===y&&!s.voided;}),ye=expsLog.filter(function(e){return new Date(e.date).getFullYear()===y;});var tR=ys.reduce(function(a,s){return a+(s.net||0);},0),tP=ys.reduce(function(a,s){return a+s.profit;},0),tE=ye.reduce(function(a,e){return a+e.amount;},0),tN=tP-tE;meter(tR,tN,'y-meter');document.getElementById('y-stats').innerHTML='<div class="stat-box"><div class="stat-lbl">ยอดขายสุทธิรวมปี</div><div class="stat-val" style="color:var(--tc)">฿'+fmt(tR)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรขั้นต้นรวมปี</div><div class="stat-val" style="color:#1565C0">฿'+fmt(tP)+'</div></div><div class="stat-box"><div class="stat-lbl">กำไรสุทธิรวมปี</div><div class="stat-val" style="color:'+(tN>=0?'var(--tc)':'#B71C1C')+'">฿'+fmt(tN)+'</div></div>';var mR=[],mP=[],mL=[];for(var m=1;m<=12;m++){var ms2=ys.filter(function(s){return new Date(s.date).getMonth()+1===m;}),me2=ye.filter(function(e){return new Date(e.date).getMonth()+1===m;});mR.push(parseFloat(ms2.reduce(function(a,s){return a+(s.net||0);},0).toFixed(2)));mP.push(parseFloat((ms2.reduce(function(a,s){return a+s.profit;},0)-me2.reduce(function(a,e){return a+e.amount;},0)).toFixed(2)));mL.push(MONTHS[m].slice(0,3));}var canvas=document.getElementById('year-chart');if(yearChart) yearChart.destroy();var tc=isDark?'#ccc':'#555';yearChart=new Chart(canvas,{type:'bar',data:{labels:mL,datasets:[{label:'ยอดขาย',data:mR,backgroundColor:'rgba(46,125,50,.75)',borderColor:'#2E7D32',borderWidth:1},{label:'กำไรสุทธิ',data:mP,backgroundColor:'rgba(21,101,192,.65)',borderColor:'#1565C0',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10},color:tc}}},scales:{y:{ticks:{font:{size:9},color:tc},grid:{color:isDark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)'}},x:{ticks:{font:{size:9},color:tc}}}}});var rows='<table><thead><tr><th>เดือน</th><th class="nr">บิล</th><th class="nr">ยอดขาย (฿)</th><th class="nr">กำไรขั้นต้น (฿)</th><th class="nr">ค่าใช้จ่าย (฿)</th><th class="nr">กำไรสุทธิ (฿)</th></tr></thead><tbody>',gR=0,gP=0,gE=0,gN=0,gB=0;for(var m=1;m<=12;m++){var ms=ys.filter(function(s){return new Date(s.date).getMonth()+1===m;}),me=ye.filter(function(e){return new Date(e.date).getMonth()+1===m;}),r=ms.reduce(function(a,s){return a+(s.net||0);},0),p=ms.reduce(function(a,s){return a+s.profit;},0),e=me.reduce(function(a,x){return a+x.amount;},0),n=p-e,b=ms.length;gR+=r;gP+=p;gE+=e;gN+=n;gB+=b;rows+='<tr><td>'+MONTHS[m]+'</td><td class="nr">'+b+'</td><td class="nr" style="color:var(--tc);font-weight:700">'+fmt(r)+'</td><td class="nr" style="color:#1565C0">'+fmt(p)+'</td><td class="nr" style="color:#B71C1C">'+fmt(e)+'</td><td class="nr" style="color:'+(n>=0?'var(--tc)':'#B71C1C')+';font-weight:700">'+fmt(n)+'</td></tr>';}rows+='<tr style="background:#E8F5E9;font-weight:700"><td>รวมทั้งปี</td><td class="nr">'+gB+'</td><td class="nr" style="color:var(--tc)">'+fmt(gR)+'</td><td class="nr" style="color:#1565C0">'+fmt(gP)+'</td><td class="nr" style="color:#B71C1C">'+fmt(gE)+'</td><td class="nr" style="color:'+(gN>=0?'var(--tc)':'#B71C1C')+'">'+fmt(gN)+'</td></tr></tbody></table>';document.getElementById('y-monthly').innerHTML=rows;var cnt={};ys.forEach(function(s){s.items.forEach(function(it){cnt[it.name]=(cnt[it.name]||0)+it.qty;});});var top=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];}).slice(0,10),mx=top.length?top[0][1]:1,rk=['rk1','rk2','rk3','rk4','rk5'];document.getElementById('y-top10').innerHTML=top.length?top.map(function(e,i){return '<div class="t5row"><div class="t5rank '+(rk[i]||'rk5')+'">'+(i+1)+'</div><div style="flex:1"><div style="font-weight:700;font-size:12px">'+e[0]+'</div><div class="t5bar"><div class="t5fill" style="width:'+(e[1]/mx*100).toFixed(0)+'%"></div></div></div><div style="font-weight:700;color:var(--tc);font-size:12px">'+e[1]+' ชิ้น</div></div>';}).join(''):'<div class="empty-msg">ยังไม่มีข้อมูล</div>';var etot={};ye.forEach(function(e){etot[e.type]=(etot[e.type]||0)+e.amount;});document.getElementById('y-exptbl').innerHTML=ye.length?'<table><thead><tr><th>ประเภท</th><th class="nr">รวมทั้งปี (฿)</th></tr></thead><tbody>'+Object.entries(etot).sort(function(a,b){return b[1]-a[1];}).map(function(e){return '<tr><td>'+e[0]+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e[1])+'</td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td style="font-weight:700">รวมทั้งหมด</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(tE)+'</td></tr></tbody></table>':'<div class="empty-msg">ไม่มีข้อมูลค่าใช้จ่าย</div>';}
 
 /* CSV */
 function dlCsv(name,rows){var bom='\uFEFF',csv=bom+rows.map(function(r){return r.map(function(c){var s=String(c==null?'':c);if(s.indexOf(',')!==-1||s.indexOf('"')!==-1||s.indexOf('\n')!==-1) s='"'+s.replace(/"/g,'""')+'"';return s;}).join(',');}).join('\r\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();}
@@ -954,9 +992,9 @@ function renderAdminProds(){
     var hist=p.hist||[],lastH=hist.length?hist[hist.length-1]:null;
     var lastFill=lastH?'<span style="font-size:11px;color:#1565C0;font-weight:700">+'+lastH.addQty+'</span><br><span style="font-size:10px;color:#9E9E9E">'+fmtDate(lastH.date)+'</span>':'<span style="font-size:11px;color:#9E9E9E">-</span>';
     return '<tr>'+
-      '<td><button class="btn btn-r btn-sm" data-did="'+p.id+'" onclick="delProd(this)" title="ลบสินค้า" style="padding:4px 7px">🗑️</button></td>'+
+      '<td><button class="btn btn-r btn-sm" data-did="'+p.id+'" onclick="delProd(this)" style="padding:3px 6px">🗑️</button></td>'+
       '<td style="font-weight:700">'+p.name+'</td>'+
-      '<td><span style="background:'+cat.bg+';color:#fff;border-radius:11px;padding:2px 8px;font-size:11px;font-weight:700">'+cat.name+'</span></td>'+
+      '<td><span style="background:'+cat.bg+';color:#fff;border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700">'+cat.name+'</span></td>'+
       '<td class="nr" style="color:var(--tc);font-weight:700">฿'+fmt(p.price)+cw+'</td>'+
       '<td class="nr" style="color:#B71C1C">฿'+fmt(p.cost)+'</td>'+
       '<td class="nr" style="font-weight:700;color:'+(p.stock<=p.minStock?'#E65100':'#212121')+'">'+p.stock+'</td>'+
@@ -972,12 +1010,12 @@ function addCat(){var name=document.getElementById('new-cat').value.trim();if(!n
 function delCat(btn){var id=btn.dataset.delc;if(prods.find(function(p){return p.cat===id;})){alert('ไม่สามารถลบได้ มีสินค้าในหมวดนี้');return;}if(!confirm('ลบหมวดนี้ใช่ไหม?')) return;cats=cats.filter(function(c){return c.id!==id;});sv('shop_cats',cats);renderCatChips();fillApCat();fillAdminCatFilter();buildCats();}
 function fillExpSels(){var opts=expTypes.map(function(t){return '<option>'+t+'</option>';}).join('');var s=document.getElementById('exp-type-sel');if(s) s.innerHTML=opts;}
 function fillDayExpSel(){var s=document.getElementById('day-exp-sel');if(!s) return;s.innerHTML=expTypes.map(function(t){return '<option>'+t+'</option>';}).join('');}
-function renderExpChips(){var el=document.getElementById('exp-type-chips');if(!el) return;el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:4px">'+expTypes.map(function(t,i){return '<span style="background:#E8F5E9;color:#1B5E20;border-radius:20px;padding:3px 9px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:3px">'+t+(expTypes.length>1?'<button data-idx="'+i+'" onclick="delExpType(this)" style="background:none;border:none;cursor:pointer;color:#1B5E20;font-size:12px;padding:0">×</button>':'')+'</span>';}).join('')+'</div>';}
+function renderExpChips(){var el=document.getElementById('exp-type-chips');if(!el) return;el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:3px">'+expTypes.map(function(t,i){return '<span style="background:#E8F5E9;color:#1B5E20;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:3px">'+t+(expTypes.length>1?'<button data-idx="'+i+'" onclick="delExpType(this)" style="background:none;border:none;cursor:pointer;color:#1B5E20;font-size:11px;padding:0">×</button>':'')+'</span>';}).join('')+'</div>';}
 function addExpType(){var val=document.getElementById('new-exp-type').value.trim();if(!val||expTypes.indexOf(val)!==-1) return;expTypes.push(val);sv('shop_exp_types',expTypes);document.getElementById('new-exp-type').value='';renderExpChips();fillExpSels();}
 function delExpType(btn){var i=parseInt(btn.dataset.idx);if(!confirm('ลบ "'+expTypes[i]+'" ใช่ไหม?')) return;expTypes.splice(i,1);sv('shop_exp_types',expTypes);renderExpChips();fillExpSels();}
 function addExp(){var type=document.getElementById('exp-type-sel').value,amt=parseFloat(document.getElementById('exp-amt').value)||0,note=document.getElementById('exp-note').value.trim(),mel=document.getElementById('msg-exp');if(amt<=0){mel.textContent='กรุณาใส่จำนวนเงิน';mel.style.color='#B71C1C';return;}expsLog.push({id:genId(),date:todayStr(),type:type,amount:amt,note:note});sv('shop_exps',expsLog);document.getElementById('exp-amt').value='';document.getElementById('exp-note').value='';mel.textContent='บันทึกแล้ว!';mel.style.color='var(--tc)';renderTodayExps();}
 function delExp(btn){if(!confirm('ลบรายการนี้?')) return;expsLog=expsLog.filter(function(e){return e.id!==btn.dataset.eid;});sv('shop_exps',expsLog);renderTodayExps();}
-function renderTodayExps(){var el=document.getElementById('today-exps');if(!el) return;var list=expsLog.filter(function(e){return e.date===todayStr();});if(!list.length){el.innerHTML='<div style="color:#9E9E9E;font-size:12px">ยังไม่มีค่าใช้จ่ายวันนี้</div>';return;}var tot=list.reduce(function(a,e){return a+e.amount;},0);el.innerHTML='<table><thead><tr><th>ประเภท</th><th>หมายเหตุ</th><th class="nr">จำนวน (฿)</th><th></th></tr></thead><tbody>'+list.map(function(e){return '<tr><td><span class="badge bgo">'+e.type+'</span></td><td style="color:#757575">'+(e.note||'-')+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e.amount)+'</td><td><button class="btn btn-r btn-sm" data-eid="'+e.id+'" onclick="delExp(this)">ลบ</button></td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td colspan="2" style="font-weight:700">รวม</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(tot)+'</td><td></td></tr></tbody></table>';}
+function renderTodayExps(){var el=document.getElementById('today-exps');if(!el) return;var list=expsLog.filter(function(e){return e.date===todayStr();});if(!list.length){el.innerHTML='<div style="color:#9E9E9E;font-size:11px">ยังไม่มีค่าใช้จ่ายวันนี้</div>';return;}var tot=list.reduce(function(a,e){return a+e.amount;},0);el.innerHTML='<table><thead><tr><th>ประเภท</th><th>หมายเหตุ</th><th class="nr">จำนวน (฿)</th><th></th></tr></thead><tbody>'+list.map(function(e){return '<tr><td><span class="badge bgo">'+e.type+'</span></td><td style="color:#757575;font-size:12px">'+(e.note||'-')+'</td><td class="nr" style="color:#B71C1C;font-weight:700">'+fmt(e.amount)+'</td><td><button class="btn btn-r btn-sm" data-eid="'+e.id+'" onclick="delExp(this)">ลบ</button></td></tr>';}).join('')+'<tr style="background:#FFEBEE"><td colspan="2" style="font-weight:700">รวม</td><td class="nr" style="font-weight:700;color:#B71C1C">'+fmt(tot)+'</td><td></td></tr></tbody></table>';}
 
 /* INIT */
 applyThemeColor(themeColor);applyName();applyDark();
